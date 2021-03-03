@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Anshul Sharma</title>
-    <link>https://thevoxium.github.io/</link>
-    <description>Recent content on Anshul Sharma</description>
+    <title>Politics on Anshul Sharma</title>
+    <link>https://thevoxium.github.io/tags/politics/</link>
+    <description>Recent content in Politics on Anshul Sharma</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Sat, 17 Oct 2020 21:58:41 +0530</lastBuildDate>
     
-	<atom:link href="https://thevoxium.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://thevoxium.github.io/tags/politics/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -20,16 +20,6 @@
       <guid>https://thevoxium.github.io/posts/how_we_lost/</guid>
       <description>What we see around happening is not the result of sectarian politics practiced by the ruling Right-Wing BJP. The party has just successfully helped the differences to come out. Majority of Indians have deep rooted hatred towards the people of other religion way before 2014. So, what is the difference between now and then?
 Before 2014 We all can agree on the fact that BJP (backed by RSS) is the most powerful party we have in India.</description>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://thevoxium.github.io/about/</link>
-      <pubDate>Sat, 17 Oct 2020 21:11:49 +0530</pubDate>
-      
-      <guid>https://thevoxium.github.io/about/</guid>
-      <description>My name is Anshul Sharma. I am a second year undergraduate student at IIT Kharagpur. Recently, I started exploring the field of Deep Learning for its applications in Computer Vision.
-I have applied the power of Deep Learning to solve problems like Image Super Resolution, Segmenting Retinal Vessels from images and Classification of Pulsars. Deep Learning is a rapidly evolving field and recent advancements have enabled us to use Deep Learning for as many applications as we can.</description>
     </item>
     
   </channel>

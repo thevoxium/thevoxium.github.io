@@ -1,25 +1,35 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Posts on TheVoxium</title>
-    <link>https://thevoxium.github.io/posts/</link>
-    <description>Recent content in Posts on TheVoxium</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>© Anshul</copyright>
-    <lastBuildDate>Wed, 03 Mar 2021 23:01:22 +0530</lastBuildDate>
-    
-	<atom:link href="https://thevoxium.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>The Days We Lived</title>
-      <link>https://thevoxium.github.io/posts/the_lost_life/</link>
-      <pubDate>Wed, 03 Mar 2021 23:01:22 +0530</pubDate>
-      
-      <guid>https://thevoxium.github.io/posts/the_lost_life/</guid>
-      <description>A whole year has passed. Who knew I am going to miss my hall room after the lockdown was imposed in March. At that time we were all quite happy as exams got postponed but that happiness did not last more than a week I guess. You miss your wingies, and that friend’s room where you spent most of your time watching movies or just chilling. With most of that gone now, I have nothing in my life, just my laptop and four walls of boredom.</description>
-    </item>
-    
-  </channel>
+	<channel>
+		<title>Posts on Anshul Sharma</title>
+		<link>https://thevoxium.github.io/posts/</link>
+		<description>Recent content in Posts on Anshul Sharma</description>
+		<generator>Hugo -- gohugo.io</generator>
+		<language>en-us</language>
+		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
+		<lastBuildDate>Sat, 17 Oct 2020 21:58:41 +0530</lastBuildDate>
+		<atom:link href="https://thevoxium.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>How We Lost as a Nation</title>
+			<link>https://thevoxium.github.io/posts/how_we_lost/</link>
+			<pubDate>Sat, 17 Oct 2020 21:58:41 +0530</pubDate>
+			
+			<guid>https://thevoxium.github.io/posts/how_we_lost/</guid>
+			<description>What we see around happening is not the result of sectarian politics practiced by the ruling Right-Wing BJP. The party has just successfully helped the differences to come out. Majority of Indians have deep rooted hatred towards the people of other religion way before 2014. So, what is the difference between now and then?
+Before 2014 We all can agree on the fact that BJP (backed by RSS) is the most powerful party we have in India.</description>
+			<content type="html"><![CDATA[<p>What we see around happening is not the result of sectarian politics practiced by the ruling Right-Wing BJP. The party has just successfully helped the differences to come out. Majority of Indians have deep rooted hatred towards the people of other religion way before 2014. So, what is the difference between now and then?</p>
+<h3 id="before-2014">Before 2014</h3>
+<p>We all can agree on the fact that BJP (backed by RSS) is the most powerful party we have in India. Unlike Congress, BJP has always tried to understand what&rsquo;s happening on the ground. During the infamous Emergency imposed by former Prime Minister Indira Gandhi, the entire Bharatiya Jana Sangh went underground to avoid arrest under MISA. Even then, the RSS and its child organizations tried to spread in rural areas and areas not known for Right-wing politics.</p>
+<p>Congress, on the other hand has shown arrogance in this regard. The party has completely failed to mobilize the mass opinion. But how this explains the concept of sectarian politics in India?</p>
+<p>Indian Hindus always had the underlying feeling of suppression during the colonial rule because of they easily gave up to Muslim rule and then to British rule. Then came Jinnah. He wanted a separate nation for Muslims. This was the first foundation of Hate based politics we see today. After the partition, both India and Pakistan saw massive massacres on both sides of the border. Internally, India saw bloody riots and people of different religions started hating each other more than ever. This hate accumulated over generations and today we have communal majority population, a communal media and the largest party with communal agenda.</p>
+<h3 id="after-2014">After 2014</h3>
+<p>After the India against corruption movement, there was a massive support for BJP as the country found an alternative to Congress and its frequent scams. People saw Narendra Modi as a saviour after his Gujarat model. This was not some undercurrent, it was a tsunami of support. BJP promised development, two crore jobs per year, and an economy with growth rate faster than previous UPA (double digit growth). Then, BJP won with as massive victory.</p>
+<p>BJP started with making major decisions that initially worked for short term. But then, arrogance of just one person led to massive blow on economy and taxation system, one after the another. To hide the failures, government diverted the focus of Indians to Pakistan. It worked pretty well.</p>
+<p>But the major blow given by the party to the constitution of India was the excessive use of UAPA and Sedition Law. It started with students, then they moved to teachers, journalists, activists, and to Bollywood in 2020. Those who were weak and afraid of the government using CBI, ED, and IT department against them, surrendered. <strong>&ldquo;Media was asked to bend, but it started crawling&rdquo;</strong>. Ironically, LK Adavni said this during Emergency. What we have today as a media, is scared to death.</p>
+<p>After 2014, we can see increasing number of lynching cases against the minority. Generally, on mere suspicion of possessing beef. People are not afraid of killing other ones on grounds of religion anymore. What started in 1947, resulted in India of 2020. Not only the government, media also has a much bigger role to play here. Recently, we say a program by Sudarshan News on UPSC Jihaad. They are airing it because people are watching it. People are watching it because of that deep rooted hatred. I just don&rsquo;t know how long this will last. May be until eternity.</p>
+<p>We can only hope that people start asking questions on Economy, Health, Education and Employment among other important topics. Otherwise we will continue Hindu Muslim politics. We have dark times ahead.</p>
+]]></content>
+		</item>
+		
+	</channel>
 </rss>
