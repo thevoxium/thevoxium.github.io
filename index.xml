@@ -2,31 +2,33 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>TheVoxium</title>
-    <link>http://thevoxium.github.io/</link>
+    <link>https://thevoxium.github.io/</link>
     <description>Recent content on TheVoxium</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <copyright>© Anshul</copyright>
     <lastBuildDate>Wed, 03 Mar 2021 23:01:22 +0530</lastBuildDate>
     
-	<atom:link href="http://thevoxium.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://thevoxium.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>The Days We Lived</title>
-      <link>http://thevoxium.github.io/posts/the_lost_life/</link>
+      <link>https://thevoxium.github.io/posts/the_lost_life/</link>
       <pubDate>Wed, 03 Mar 2021 23:01:22 +0530</pubDate>
       
-      <guid>http://thevoxium.github.io/posts/the_lost_life/</guid>
-      <description>A whole year has passed. Who knew I am going to miss my hall room after the lockdown was imposed in March.</description>
+      <guid>https://thevoxium.github.io/posts/the_lost_life/</guid>
+      <description>A whole year has passed. Who knew I am going to miss my hall room after the lockdown was imposed in March. At that time we were all quite happy as exams got postponed but that happiness did not last more than a week I guess. You miss your wingies, and that friend’s room where you spent most of your time watching movies or just chilling. With most of that gone now, I have nothing in my life, just my laptop and four walls of boredom.</description>
     </item>
     
     <item>
       <title>About</title>
-      <link>http://thevoxium.github.io/about/</link>
+      <link>https://thevoxium.github.io/about/</link>
       <pubDate>Sat, 17 Oct 2020 21:11:49 +0530</pubDate>
       
-      <guid>http://thevoxium.github.io/about/</guid>
-      <description>My name is Anshul Sharma. I am a second year undergraduate student at IIT Kharagpur.</description>
+      <guid>https://thevoxium.github.io/about/</guid>
+      <description>My name is Anshul Sharma. I am a second year undergraduate student at IIT Kharagpur. Recently, I started exploring the field of Deep Learning for its applications in Computer Vision.
+I have applied the power of Deep Learning to solve problems like Image Super Resolution, Segmenting Retinal Vessels from images and Classification of Pulsars. Deep Learning is a rapidly evolving field and recent advancements have enabled us to use Deep Learning for as many applications as we can.</description>
     </item>
     
   </channel>

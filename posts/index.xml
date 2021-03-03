@@ -2,22 +2,23 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on TheVoxium</title>
-    <link>http://thevoxium.github.io/posts/</link>
+    <link>https://thevoxium.github.io/posts/</link>
     <description>Recent content in Posts on TheVoxium</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <copyright>© Anshul</copyright>
     <lastBuildDate>Wed, 03 Mar 2021 23:01:22 +0530</lastBuildDate>
     
-	<atom:link href="http://thevoxium.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://thevoxium.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>The Days We Lived</title>
-      <link>http://thevoxium.github.io/posts/the_lost_life/</link>
+      <link>https://thevoxium.github.io/posts/the_lost_life/</link>
       <pubDate>Wed, 03 Mar 2021 23:01:22 +0530</pubDate>
       
-      <guid>http://thevoxium.github.io/posts/the_lost_life/</guid>
-      <description>A whole year has passed. Who knew I am going to miss my hall room after the lockdown was imposed in March.</description>
+      <guid>https://thevoxium.github.io/posts/the_lost_life/</guid>
+      <description>A whole year has passed. Who knew I am going to miss my hall room after the lockdown was imposed in March. At that time we were all quite happy as exams got postponed but that happiness did not last more than a week I guess. You miss your wingies, and that friend’s room where you spent most of your time watching movies or just chilling. With most of that gone now, I have nothing in my life, just my laptop and four walls of boredom.</description>
     </item>
     
   </channel>
