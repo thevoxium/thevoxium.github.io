@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>TheVoxium</title>
+    <link>http://thevoxium.github.io/</link>
+    <description>Recent content on TheVoxium</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Mar 2021 23:01:22 +0530</lastBuildDate>
+    
+	<atom:link href="http://thevoxium.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>The Days We Lived</title>
+      <link>http://thevoxium.github.io/posts/the_lost_life/</link>
+      <pubDate>Wed, 03 Mar 2021 23:01:22 +0530</pubDate>
+      
+      <guid>http://thevoxium.github.io/posts/the_lost_life/</guid>
+      <description>A whole year has passed. Who knew I am going to miss my hall room after the lockdown was imposed in March.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>http://thevoxium.github.io/about/</link>
+      <pubDate>Sat, 17 Oct 2020 21:11:49 +0530</pubDate>
+      
+      <guid>http://thevoxium.github.io/about/</guid>
+      <description>My name is Anshul Sharma. I am a second year undergraduate student at IIT Kharagpur.</description>
+    </item>
+    
+  </channel>
+</rss>
