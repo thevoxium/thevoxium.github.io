@@ -1,0 +1,44 @@
+html {
+  background-image: url("7971.jpg");
+  line-height: 1.6;
+  letter-spacing: .06em;
+  scroll-behavior: smooth;
+}
+
+#home-title {
+  color: #8f93a2;
+}
+
+#home-nav a {
+    color: #8f93a2;
+}
+
+#home-nav a:hover {
+    color:  #3FFCEA;
+}
+
+
+#home-subtitle {
+    color: #00FF91;
+}
+
+h1{
+  color: #00FF91;
+}
+
+h3{
+  color: #00FF91;
+}
+
+.hdr-wrapper {
+    background: #343635;
+}
+
+
+#site-header {
+    background-color: #343635;
+}
+
+p{
+  color: #8f93a2;
+}
