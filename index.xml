@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>TheVoxium</title>
+    <link>https://example.org/</link>
+    <description>Recent content on TheVoxium</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 07 Nov 2024 07:07:07 +0100</lastBuildDate>
+    <atom:link href="https://example.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Stellar: 2D Physics Engine</title>
+      <link>https://example.org/posts/stellar-engine/</link>
+      <pubDate>Thu, 07 Nov 2024 07:07:07 +0100</pubDate>
+      <guid>https://example.org/posts/stellar-engine/</guid>
+      <description>&lt;h2 id=&#34;table-of-contents&#34;&gt;Table of Contents&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;Introduction&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Overview&lt;/li&gt;&#xA;&lt;li&gt;Prerequisites&lt;/li&gt;&#xA;&lt;li&gt;What We&amp;rsquo;ll Build&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Understanding the Fundamentals&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Vector Mathematics&lt;/li&gt;&#xA;&lt;li&gt;Physics Concepts&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Basic Structure and Vector Operations&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Vector Implementation&lt;/li&gt;&#xA;&lt;li&gt;Essential Vector Operations&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;Core Components&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Body Definition&lt;/li&gt;&#xA;&lt;li&gt;Shape Types&lt;/li&gt;&#xA;&lt;li&gt;World Configuration&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h2 id=&#34;1-introduction&#34;&gt;1. Introduction&lt;/h2&gt;&#xA;&lt;h3 id=&#34;overview&#34;&gt;Overview&lt;/h3&gt;&#xA;&lt;p&gt;Building a physics engine is an exciting journey into the world of game development and simulation. This tutorial will guide you through creating a 2D physics engine from scratch, explaining every component in detail. We&amp;rsquo;ll cover everything from basic vector mathematics to complex collision resolution.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html><head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title>Stellar: 2D Physics Engine - TheVoxium</title>
+
+    
+    
+    <meta name="description" content="Table of Contents
+
+Introduction
+
+Overview
+Prerequisites
+What We&rsquo;ll Build
+
+
+Understanding the Fundamentals
+
+Vector Mathematics
+Physics Concepts
+
+
+Basic Structure and Vector Operations
+
+Vector Implementation
+Essential Vector Operations
+
+
+Core Components
+
+Body Definition
+Shape Types
+World Configuration
+
+
+
+1. Introduction
+Overview
+Building a physics engine is an exciting journey into the world of game development and simulation. This tutorial will guide you through creating a 2D physics engine from scratch, explaining every component in detail. We&rsquo;ll cover everything from basic vector mathematics to complex collision resolution." />
+    <meta name="author" content="" />
+    
+
+    <link href="https://unpkg.com/@master/normal.css" rel="stylesheet">
+    <script src="https://unpkg.com/@master/style@1.5.0"></script>
+    <script src="https://unpkg.com/@master/styles@1.13.0"></script>
+    <script src="https://unpkg.com/master-styles-group"></script>
+    <script src="https://unpkg.com/themes.js"></script>
+    <script>window.themes = window.themes || new window.Themes()</script>
+
+    <style>
+        :root {
+            --font-sans: "Inter var", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+        }
+    </style></head>
+<body class="bg:fade-84@dark font:fade-16@dark font:sans">
+    <nav class="w:full h:90 fixed bg:fade-84/.95@dark bg:white z:1000">
+    <div class="
+        h:full
+        w:full
+        max-w:1200
+        mx:auto
+        px:32
+        d:flex
+        align-items:center
+    ">
+        <div>
+            <a href="/" class="mr-3 font:extralight">
+              
+              TheVoxium
+              
+            </a>
+        </div>
+
+        <div class="ml:auto">
+            
+            
+            
+        </div>
+    </div>
+</nav>
+<div class="d:flex flex:column@<=sm pt:90 px:24 jc:center gap:44 word-break:break-word">
+        <div class="max-w:700 w:full box:content-box">
+<article class="box:border-box pt:32">
+    <header class="mb:32">
+        <div class="font:40 font:extrabold">Stellar: 2D Physics Engine</div>
+        <div class="mt:16 f:fade-60">
+            <time>Nov 7, 2024</time>
+            </div>
+    </header><div class="
+    _:where(a):hover{text-decoration-color:fade}
+    _:where(a){text-decoration:2;underline;fade-10;_text-decoration-color:fade-70@dark}
+    _:where(blockquote){bl:5;solid;fade-76/.1;_bl:5;solid;fade-34/.1@dark}
+    _:where(code){font:90%;_v:middle}
+    _:where(code:not(.highlight_*,pre_*)){p:2;6;_r:4}
+    _:where(del){text-decoration:1;line-through;fade-68;_text-decoration-color:red-64@dark}
+    _:where(figcaption){text:14;_p:10;20;0;_width:fit;_mx:auto;_font:fade-56;_font:fade-57@dark}
+    _:where(h1){font:40;_font:extrabold}
+    _:where(h1,h2,h3)+:where(h1,h2,h3){mt:.5em}
+    _:where(h1,h2,h3,h4,h5,h6){mt:2em}
+    _:where(h2){mb:1em;_font:32}
+    _:where(h3){font:24}
+    _:where(h4){font:20}
+    _:where(h5){font:16}
+    _:where(h6){font:14}
+    _:where(li)::marker{font:fade-44;_font:fade-68@dark}
+    _:where(li){pl:.375em}
+    _:where(mark){text-decoration:1;underline;#fce016;_bg:transparent;_text-decoration-color:rgb(252;224;22/.5)@dark}
+    _:where(p,li){font:fade-76;_font:16;_line-height:1.65;_font:fade-34@dark}
+    _:where(p,pre,blockquote,figure,ul,ol,table){my:1.125em}
+    >:first-child{mt:0!}
+    _:where(pre){p:20;_r:8;_overflow:auto}
+    _:where(pre,code:not(.highlight_*)){bg:fade-2;_bg:fade-92!@dark}
+    _:where(strong,b,a,code:not(.highlight_*),mark,del){font:fade-92;_font:fade-12@dark}
+    _:where(table){width:full;_border-spacing:0}
+    _:where(td){v:baseline}
+    _:where(td,th):first-child{pl:0}
+    _:where(td,th):last-child{pr:0}
+    _:where(td,th){bb:1;solid;fade-92/.06;_p:6;_b:fade-4/.04@dark}
+    _:where(th){font:fade-78;_font:14;_text:left;_font:fade-12@dark}
+    _:where(th,p_code,li_code,a,mark){font:semibold;_font:medium@dark}
+    _:where(ul){list-style-type:disc}
+    _:where(ul,ol,blockquote){pl:1.5em}
+    _:where(video,img){max-width:full}
+    _:where(a,mark){text-underline-offset:3}
+    _:where(hr){h:2;_bg:fade-10;_bg:fade-70@dark;_my:3em}
+"><h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li>Introduction
+<ul>
+<li>Overview</li>
+<li>Prerequisites</li>
+<li>What We&rsquo;ll Build</li>
+</ul>
+</li>
+<li>Understanding the Fundamentals
+<ul>
+<li>Vector Mathematics</li>
+<li>Physics Concepts</li>
+</ul>
+</li>
+<li>Basic Structure and Vector Operations
+<ul>
+<li>Vector Implementation</li>
+<li>Essential Vector Operations</li>
+</ul>
+</li>
+<li>Core Components
+<ul>
+<li>Body Definition</li>
+<li>Shape Types</li>
+<li>World Configuration</li>
+</ul>
+</li>
+</ol>
+<h2 id="1-introduction">1. Introduction</h2>
+<h3 id="overview">Overview</h3>
+<p>Building a physics engine is an exciting journey into the world of game development and simulation. This tutorial will guide you through creating a 2D physics engine from scratch, explaining every component in detail. We&rsquo;ll cover everything from basic vector mathematics to complex collision resolution.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>To follow this tutorial, you should have:</p>
+<ul>
+<li>Intermediate knowledge of C++</li>
+<li>Basic understanding of vector mathematics</li>
+<li>Familiarity with fundamental physics concepts</li>
+<li>A C++ development environment set up</li>
+</ul>
+<h3 id="what-well-build">What We&rsquo;ll Build</h3>
+<p>We&rsquo;re going to create a complete 2D physics engine with the following features:</p>
+<ul>
+<li>Rigid body dynamics</li>
+<li>Circle and AABB (Axis-Aligned Bounding Box) collision detection</li>
+<li>Spatial partitioning for efficient collision detection</li>
+<li>Impulse-based collision resolution</li>
+<li>Gravity and force application</li>
+<li>Position and velocity integration</li>
+</ul>
+<h2 id="2-understanding-the-fundamentals">2. Understanding the Fundamentals</h2>
+<h3 id="vector-mathematics">Vector Mathematics</h3>
+<p>At the heart of our physics engine lies vector mathematics. We&rsquo;ll be working extensively with 2D vectors for:</p>
+<ul>
+<li>Position representation</li>
+<li>Velocity calculations</li>
+<li>Force applications</li>
+<li>Collision detection and response</li>
+</ul>
+<h3 id="physics-concepts">Physics Concepts</h3>
+<p>Before diving into the code, let&rsquo;s understand the key physics concepts we&rsquo;ll be implementing:</p>
+<ul>
+<li>Newton&rsquo;s laws of motion</li>
+<li>Linear momentum</li>
+<li>Impulse forces</li>
+<li>Coefficient of restitution</li>
+<li>Friction</li>
+<li>Conservation of energy</li>
+</ul>
+<h2 id="3-basic-structure-and-vector-operations">3. Basic Structure and Vector Operations</h2>
+<h3 id="vector-implementation">Vector Implementation</h3>
+<p>Let&rsquo;s start with our fundamental building block - the 2D vector structure:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">vec2</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> x;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> y;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>This simple structure represents a point or vector in 2D space. We&rsquo;ll build several operations around this basic type.</p>
+<h3 id="essential-vector-operations">Essential Vector Operations</h3>
+<p>Let&rsquo;s implement the core vector operations we&rsquo;ll need throughout our engine:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// Vector addition
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>vec2 <span style="color:#a6e22e">vec2_add</span>(<span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>a, <span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> vec2{a.x <span style="color:#f92672">+</span> b.x, a.y <span style="color:#f92672">+</span> b.y};
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Vector subtraction
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>vec2 <span style="color:#a6e22e">vec2_sub</span>(<span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>a, <span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> vec2{a.x <span style="color:#f92672">-</span> b.x, a.y <span style="color:#f92672">-</span> b.y};
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Scalar multiplication
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>vec2 <span style="color:#a6e22e">vec2_mul</span>(<span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>a, <span style="color:#66d9ef">double</span> scalar) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> vec2{a.x <span style="color:#f92672">*</span> scalar, a.y <span style="color:#f92672">*</span> scalar};
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Dot product
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> <span style="color:#a6e22e">vec2_dot</span>(<span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>a, <span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> a.x <span style="color:#f92672">*</span> b.x <span style="color:#f92672">+</span> a.y <span style="color:#f92672">*</span> b.y;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Cross product (2D version returns scalar)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> <span style="color:#a6e22e">vec2_cross</span>(<span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>a, <span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> a.x <span style="color:#f92672">*</span> b.y <span style="color:#f92672">-</span> b.x <span style="color:#f92672">*</span> a.y;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Each of these operations serves a specific purpose:</p>
+<ul>
+<li><code>vec2_add</code>: Used for combining vectors, such as adding velocity to position</li>
+<li><code>vec2_sub</code>: Used for finding direction vectors between points</li>
+<li><code>vec2_mul</code>: Used for scaling vectors (e.g., applying force)</li>
+<li><code>vec2_dot</code>: Used for projection calculations and finding angles</li>
+<li><code>vec2_cross</code>: Used for determining rotational direction and area calculations</li>
+</ul>
+<p>Additional utility functions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// Vector normalization
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">vec2_normalize</span>(vec2 <span style="color:#f92672">&amp;</span>a) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> length <span style="color:#f92672">=</span> sqrt(a.x <span style="color:#f92672">*</span> a.x <span style="color:#f92672">+</span> a.y <span style="color:#f92672">*</span> a.y);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (length <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>        a.x <span style="color:#f92672">/=</span> length;
+</span></span><span style="display:flex;"><span>        a.y <span style="color:#f92672">/=</span> length;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Vector length calculation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> <span style="color:#a6e22e">vec2_length</span>(<span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>a) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> sqrt(a.x <span style="color:#f92672">*</span> a.x <span style="color:#f92672">+</span> a.y <span style="color:#f92672">*</span> a.y);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Squared length (optimization for comparisons)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> <span style="color:#a6e22e">vec2_length_squared</span>(<span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>a) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> a.x <span style="color:#f92672">*</span> a.x <span style="color:#f92672">+</span> a.y <span style="color:#f92672">*</span> a.y;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Vector rotation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">vec2_rotate</span>(vec2 <span style="color:#f92672">&amp;</span>a, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> <span style="color:#f92672">&amp;</span>theta) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> original_x <span style="color:#f92672">=</span> a.x;
+</span></span><span style="display:flex;"><span>    a.x <span style="color:#f92672">=</span> original_x <span style="color:#f92672">*</span> cos(theta) <span style="color:#f92672">-</span> a.y <span style="color:#f92672">*</span> sin(theta);
+</span></span><span style="display:flex;"><span>    a.y <span style="color:#f92672">=</span> original_x <span style="color:#f92672">*</span> sin(theta) <span style="color:#f92672">+</span> a.y <span style="color:#f92672">*</span> cos(theta);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>These utility functions are crucial for:</p>
+<ul>
+<li>Normalizing vectors for direction calculations</li>
+<li>Finding distances between objects</li>
+<li>Optimizing calculations using squared lengths</li>
+<li>Rotating vectors for angular motion</li>
+</ul>
+<h2 id="4-core-components">4. Core Components</h2>
+<h3 id="body-definition">Body Definition</h3>
+<p>The core of our physics engine is the <code>Body</code> structure, which represents any physical object in our simulation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Body</span> {
+</span></span><span style="display:flex;"><span>    vec2 position, velocity, acceleration, forceAccumulator;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> mass, inverseMass, damping, angle;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">bool</span> isStatic, isActive;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">ShapeType</span> {
+</span></span><span style="display:flex;"><span>        SHAPE_CIRCLE,
+</span></span><span style="display:flex;"><span>        SHAPE_AABB,
+</span></span><span style="display:flex;"><span>    } shapeType;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">union</span> {
+</span></span><span style="display:flex;"><span>        Circle circle;
+</span></span><span style="display:flex;"><span>        AABB aabb;
+</span></span><span style="display:flex;"><span>    } shape;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>Let&rsquo;s break down each component:</p>
+<ul>
+<li>Position properties:
+<ul>
+<li><code>position</code>: Current position in 2D space</li>
+<li><code>angle</code>: Rotation angle (in radians)</li>
+</ul>
+</li>
+<li>Motion properties:
+<ul>
+<li><code>velocity</code>: Linear velocity</li>
+<li><code>acceleration</code>: Current acceleration</li>
+<li><code>forceAccumulator</code>: Sum of all forces acting on the body</li>
+</ul>
+</li>
+<li>Physical properties:
+<ul>
+<li><code>mass</code>: Body mass</li>
+<li><code>inverseMass</code>: Precalculated 1/mass (0 for static bodies)</li>
+<li><code>damping</code>: Velocity damping factor</li>
+</ul>
+</li>
+<li>State flags:
+<ul>
+<li><code>isStatic</code>: Whether the body can move</li>
+<li><code>isActive</code>: Whether the body participates in simulation</li>
+</ul>
+</li>
+<li>Shape information:
+<ul>
+<li><code>shapeType</code>: Enum indicating circle or AABB</li>
+<li><code>shape</code>: Union of possible shape types</li>
+</ul>
+</li>
+</ul>
+<h3 id="shape-types">Shape Types</h3>
+<p>We support two basic shape types:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">AABB</span> {
+</span></span><span style="display:flex;"><span>    vec2 min, max;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Circle</span> {
+</span></span><span style="display:flex;"><span>    vec2 center;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> radius;
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>AABB (Axis-Aligned Bounding Box):</p>
+<ul>
+<li>Defined by minimum and maximum points</li>
+<li>Simple and efficient collision detection</li>
+<li>Limited to rectangular shapes aligned with axes</li>
+</ul>
+<p>Circle:</p>
+<ul>
+<li>Defined by center point and radius</li>
+<li>Uniform collision detection in all directions</li>
+<li>Perfect for round objects</li>
+</ul>
+<h2 id="5-world-configuration-and-management">5. World Configuration and Management</h2>
+<h3 id="world-structure">World Structure</h3>
+<p>The physics world is our simulation container that manages all bodies and their interactions. Let&rsquo;s examine its implementation:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">WorldConfig</span> {
+</span></span><span style="display:flex;"><span>    vec2 gravity;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> maxDeltaTime;
+</span></span><span style="display:flex;"><span>    AABB bounds;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    WorldConfig() {
+</span></span><span style="display:flex;"><span>        gravity.x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>;
+</span></span><span style="display:flex;"><span>        gravity.y <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">9.81</span>;  <span style="color:#75715e">// Default Earth gravity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        maxDeltaTime <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.016</span>;  <span style="color:#75715e">// ~60 FPS
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        bounds.min <span style="color:#f92672">=</span> {<span style="color:#f92672">-</span><span style="color:#ae81ff">100.0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">100.0</span>};
+</span></span><span style="display:flex;"><span>        bounds.max <span style="color:#f92672">=</span> {<span style="color:#ae81ff">100.0</span>, <span style="color:#ae81ff">100.0</span>};
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">World</span> {
+</span></span><span style="display:flex;"><span>    vector<span style="color:#f92672">&lt;</span>Body<span style="color:#f92672">&gt;</span> bodies;
+</span></span><span style="display:flex;"><span>    WorldConfig config;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> activeBodyCount{<span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">bool</span> isPaused{false};
+</span></span><span style="display:flex;"><span>    vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> queryResultIndices;
+</span></span><span style="display:flex;"><span>    Grid grid;  <span style="color:#75715e">// Spatial partitioning grid
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div><p>Key components:</p>
+<ul>
+<li><code>WorldConfig</code>: Configuration parameters
+<ul>
+<li><code>gravity</code>: Global gravity vector</li>
+<li><code>maxDeltaTime</code>: Maximum time step (prevents instability)</li>
+<li><code>bounds</code>: World boundaries</li>
+</ul>
+</li>
+<li><code>World</code>: Main simulation container
+<ul>
+<li><code>bodies</code>: Vector of all physics bodies</li>
+<li><code>activeBodyCount</code>: Number of non-static bodies</li>
+<li><code>grid</code>: Spatial partitioning system</li>
+</ul>
+</li>
+</ul>
+<h3 id="world-management-functions">World Management Functions</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">initWorld</span>(World <span style="color:#f92672">&amp;</span>world, <span style="color:#66d9ef">const</span> WorldConfig config <span style="color:#f92672">=</span> WorldConfig{}) {
+</span></span><span style="display:flex;"><span>    world.bodies.clear();
+</span></span><span style="display:flex;"><span>    world.config <span style="color:#f92672">=</span> config;
+</span></span><span style="display:flex;"><span>    world.activeBodyCount <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    world.isPaused <span style="color:#f92672">=</span> false;
+</span></span><span style="display:flex;"><span>    world.queryResultIndices.reserve(<span style="color:#ae81ff">100</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    initGrid(world.grid, config.bounds, <span style="color:#ae81ff">10.0</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clearWorld</span>(World <span style="color:#f92672">&amp;</span>world) {
+</span></span><span style="display:flex;"><span>    world.bodies.clear();
+</span></span><span style="display:flex;"><span>    world.activeBodyCount <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    world.queryResultIndices.clear();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Adding and removing bodies:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">addBody</span>(World <span style="color:#f92672">&amp;</span>world, Body <span style="color:#f92672">&amp;</span>body) {
+</span></span><span style="display:flex;"><span>    world.bodies.push_back(body);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (body.isActive)
+</span></span><span style="display:flex;"><span>        world.activeBodyCount<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>(world.bodies.size() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeBody</span>(World <span style="color:#f92672">&amp;</span>world, <span style="color:#66d9ef">int</span> bodyIndex) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (bodyIndex <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> bodyIndex <span style="color:#f92672">&gt;=</span> world.bodies.size())
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (world.bodies[bodyIndex].isActive) {
+</span></span><span style="display:flex;"><span>        world.activeBodyCount<span style="color:#f92672">--</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (bodyIndex <span style="color:#f92672">&lt;</span> world.bodies.size() <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>        world.bodies[bodyIndex] <span style="color:#f92672">=</span> world.bodies.back();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    world.bodies.pop_back();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="helper-functions-for-body-creation">Helper Functions for Body Creation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">addCircle</span>(World <span style="color:#f92672">&amp;</span>world, vec2 position, <span style="color:#66d9ef">double</span> radius, <span style="color:#66d9ef">double</span> mass) {
+</span></span><span style="display:flex;"><span>    Body body{};
+</span></span><span style="display:flex;"><span>    body.position <span style="color:#f92672">=</span> position;
+</span></span><span style="display:flex;"><span>    body.velocity <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>    body.acceleration <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>    body.mass <span style="color:#f92672">=</span> mass;
+</span></span><span style="display:flex;"><span>    body.inverseMass <span style="color:#f92672">=</span> mass <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0.0</span> <span style="color:#f92672">?</span> <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> mass : <span style="color:#ae81ff">0.0</span>;
+</span></span><span style="display:flex;"><span>    body.damping <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.99</span>;
+</span></span><span style="display:flex;"><span>    body.isStatic <span style="color:#f92672">=</span> mass <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    body.isActive <span style="color:#f92672">=</span> true;
+</span></span><span style="display:flex;"><span>    body.angle <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>;
+</span></span><span style="display:flex;"><span>    body.forceAccumulator <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    body.shapeType <span style="color:#f92672">=</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE;
+</span></span><span style="display:flex;"><span>    body.shape.circle <span style="color:#f92672">=</span> {position, radius};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> addBody(world, body);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">addBox</span>(World <span style="color:#f92672">&amp;</span>world, vec2 position, vec2 size, <span style="color:#66d9ef">double</span> mass) {
+</span></span><span style="display:flex;"><span>    Body body{};
+</span></span><span style="display:flex;"><span>    body.position <span style="color:#f92672">=</span> position;
+</span></span><span style="display:flex;"><span>    body.velocity <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>    body.acceleration <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>    body.mass <span style="color:#f92672">=</span> mass;
+</span></span><span style="display:flex;"><span>    body.inverseMass <span style="color:#f92672">=</span> mass <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">?</span> <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> mass : <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    body.damping <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.99</span>;
+</span></span><span style="display:flex;"><span>    body.isStatic <span style="color:#f92672">=</span> mass <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    body.isActive <span style="color:#f92672">=</span> true;
+</span></span><span style="display:flex;"><span>    body.angle <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    body.shapeType <span style="color:#f92672">=</span> Body<span style="color:#f92672">::</span>SHAPE_AABB;
+</span></span><span style="display:flex;"><span>    body.shape.aabb <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        {position.x <span style="color:#f92672">-</span> size.x <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>, position.y <span style="color:#f92672">-</span> size.y <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>},
+</span></span><span style="display:flex;"><span>        {position.x <span style="color:#f92672">+</span> size.x <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>, position.y <span style="color:#f92672">+</span> size.y <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>}
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> addBody(world, body);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="6-force-application-and-integration">6. Force Application and Integration</h2>
+<h3 id="force-management">Force Management</h3>
+<p>Forces are fundamental to physics simulation. We implement a force accumulator pattern:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">applyForce</span>(Body <span style="color:#f92672">&amp;</span>body, <span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>force) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (body.isStatic <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>body.isActive) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    body.forceAccumulator <span style="color:#f92672">=</span> vec2_add(body.forceAccumulator, force);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">applyImpulse</span>(Body <span style="color:#f92672">&amp;</span>body, <span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>impulse) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (body.isStatic <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>body.isActive) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    vec2 deltaVelocity <span style="color:#f92672">=</span> vec2_mul(impulse, body.inverseMass);
+</span></span><span style="display:flex;"><span>    body.velocity <span style="color:#f92672">=</span> vec2_add(body.velocity, deltaVelocity);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clearForces</span>(Body <span style="color:#f92672">&amp;</span>body) {
+</span></span><span style="display:flex;"><span>    body.forceAccumulator <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">0.0</span>};
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="gravity-application">Gravity Application</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">const</span> vec2 GRAVITY{<span style="color:#ae81ff">0.0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">9.81</span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">applyGravity</span>(Body <span style="color:#f92672">&amp;</span>body) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (body.isStatic <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>body.isActive)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    vec2 gravityForce <span style="color:#f92672">=</span> vec2_mul(GRAVITY, body.mass);
+</span></span><span style="display:flex;"><span>    applyForce(body, gravityForce);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="physics-integration">Physics Integration</h3>
+<p>We use semi-implicit Euler integration for updating positions and velocities:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">integrateLinearMotion</span>(Body <span style="color:#f92672">&amp;</span>body, <span style="color:#66d9ef">double</span> dt) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (body.isStatic <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>body.isActive)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (dt <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0.0</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate acceleration from accumulated forces
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    body.acceleration <span style="color:#f92672">=</span> vec2_mul(body.forceAccumulator, body.inverseMass);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Update velocity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 deltaVelocity <span style="color:#f92672">=</span> vec2_mul(body.acceleration, dt);
+</span></span><span style="display:flex;"><span>    body.velocity <span style="color:#f92672">=</span> vec2_add(body.velocity, deltaVelocity);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Apply damping
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    body.velocity <span style="color:#f92672">=</span> vec2_mul(body.velocity, pow(body.damping, dt));
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Update position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 deltaP <span style="color:#f92672">=</span> vec2_add(
+</span></span><span style="display:flex;"><span>        vec2_mul(body.velocity, dt),
+</span></span><span style="display:flex;"><span>        vec2_mul(body.acceleration, <span style="color:#ae81ff">0.5</span> <span style="color:#f92672">*</span> dt <span style="color:#f92672">*</span> dt)
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>    body.position <span style="color:#f92672">=</span> vec2_add(body.position, deltaP);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Update shape positions
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (body.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE) {
+</span></span><span style="display:flex;"><span>        body.shape.circle.center <span style="color:#f92672">=</span> body.position;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        vec2 halfSize <span style="color:#f92672">=</span> vec2_mul(
+</span></span><span style="display:flex;"><span>            vec2_sub(body.shape.aabb.max, body.shape.aabb.min),
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">0.5</span>
+</span></span><span style="display:flex;"><span>        );
+</span></span><span style="display:flex;"><span>        body.shape.aabb.min <span style="color:#f92672">=</span> vec2_sub(body.position, halfSize);
+</span></span><span style="display:flex;"><span>        body.shape.aabb.max <span style="color:#f92672">=</span> vec2_add(body.position, halfSize);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    clearForces(body);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The integration process:</p>
+<ol>
+<li>Calculate acceleration from accumulated forces</li>
+<li>Update velocity using current acceleration</li>
+<li>Apply velocity damping to simulate air resistance</li>
+<li>Update position using velocity and acceleration</li>
+<li>Update shape-specific properties</li>
+<li>Clear accumulated forces for next frame</li>
+</ol>
+<h3 id="world-stepping">World Stepping</h3>
+<p>The main simulation step function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">stepWorld</span>(World <span style="color:#f92672">&amp;</span>world, <span style="color:#66d9ef">double</span> dt) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (world.isPaused)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Clamp dt to prevent instability
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    dt <span style="color:#f92672">=</span> min(dt, world.config.maxDeltaTime);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Update physics
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    updatePhysics(world, dt);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Update spatial partitioning
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    updateBroadPhase(world.grid, world.bodies);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">updatePhysics</span>(World <span style="color:#f92672">&amp;</span>world, <span style="color:#66d9ef">double</span> dt) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> <span style="color:#f92672">&amp;</span>body : world.bodies) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (body.isActive) {
+</span></span><span style="display:flex;"><span>            applyGravity(body);
+</span></span><span style="display:flex;"><span>            integrateLinearMotion(body, dt);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="utility-functions">Utility Functions</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">double</span> <span style="color:#a6e22e">calculateArea</span>(<span style="color:#66d9ef">const</span> Body <span style="color:#f92672">&amp;</span>body) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (body.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> M_PI <span style="color:#f92672">*</span> body.shape.circle.radius <span style="color:#f92672">*</span> body.shape.circle.radius;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        vec2 size <span style="color:#f92672">=</span> vec2_sub(body.shape.aabb.max, body.shape.aabb.min);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> size.x <span style="color:#f92672">*</span> size.y;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">double</span> <span style="color:#a6e22e">calculateMOI</span>(<span style="color:#66d9ef">const</span> Body <span style="color:#f92672">&amp;</span>body) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (body.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0.5</span> <span style="color:#f92672">*</span> body.mass <span style="color:#f92672">*</span> body.shape.circle.radius <span style="color:#f92672">*</span> 
+</span></span><span style="display:flex;"><span>               body.shape.circle.radius;
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        vec2 size <span style="color:#f92672">=</span> vec2_sub(body.shape.aabb.max, body.shape.aabb.min);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> body.mass <span style="color:#f92672">*</span> (size.x <span style="color:#f92672">*</span> size.x <span style="color:#f92672">+</span> size.y <span style="color:#f92672">*</span> size.y) <span style="color:#f92672">/</span> <span style="color:#ae81ff">12</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>AABB <span style="color:#a6e22e">getShapeBoundingBox</span>(<span style="color:#66d9ef">const</span> Body <span style="color:#f92672">&amp;</span>body) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (body.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>            {body.position.x <span style="color:#f92672">-</span> body.shape.circle.radius,
+</span></span><span style="display:flex;"><span>             body.position.y <span style="color:#f92672">-</span> body.shape.circle.radius},
+</span></span><span style="display:flex;"><span>            {body.position.x <span style="color:#f92672">+</span> body.shape.circle.radius,
+</span></span><span style="display:flex;"><span>             body.position.y <span style="color:#f92672">+</span> body.shape.circle.radius}
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> body.shape.aabb;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="7-spatial-partitioning-system">7. Spatial Partitioning System</h2>
+<h3 id="understanding-spatial-partitioning">Understanding Spatial Partitioning</h3>
+<p>Before diving into the code, let&rsquo;s understand why spatial partitioning is crucial:</p>
+<ul>
+<li>In a physics simulation, checking collisions between every pair of objects (O(n²)) becomes extremely inefficient as the number of objects grows</li>
+<li>Spatial partitioning divides the world into a grid of cells</li>
+<li>Objects are mapped to grid cells based on their position</li>
+<li>Only objects in the same or neighboring cells need to be checked for collisions</li>
+<li>This reduces collision checks from O(n²) to O(n) in most cases</li>
+</ul>
+<h3 id="grid-implementation">Grid Implementation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">GridCell</span> {
+</span></span><span style="display:flex;"><span>    vector<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span> bodyIndex;  <span style="color:#75715e">// Stores indices of bodies in this cell
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Grid</span> {
+</span></span><span style="display:flex;"><span>    vector<span style="color:#f92672">&lt;</span>GridCell<span style="color:#f92672">&gt;</span> cells;  <span style="color:#75715e">// 1D array representing 2D grid
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> cellSize;        <span style="color:#75715e">// Size of each cell
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> numRows, numCols;   <span style="color:#75715e">// Grid dimensions
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 worldMin, worldMax; <span style="color:#75715e">// World boundaries
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>};
+</span></span></code></pre></div><p>Let&rsquo;s examine each component:</p>
+<ul>
+<li><code>GridCell</code>: Contains indices of bodies that overlap this cell</li>
+<li><code>Grid</code>: Main grid structure
+<ul>
+<li><code>cells</code>: 1D vector representing 2D grid for cache efficiency</li>
+<li><code>cellSize</code>: Determines granularity of spatial partitioning</li>
+<li><code>numRows/numCols</code>: Grid dimensions</li>
+<li><code>worldMin/worldMax</code>: World boundaries for grid mapping</li>
+</ul>
+</li>
+</ul>
+<h3 id="grid-initialization-and-management">Grid Initialization and Management</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">initGrid</span>(Grid <span style="color:#f92672">&amp;</span>grid, AABB <span style="color:#f92672">&amp;</span>worldBound, <span style="color:#66d9ef">double</span> cellSize) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Set grid boundaries
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    grid.worldMin <span style="color:#f92672">=</span> worldBound.min;
+</span></span><span style="display:flex;"><span>    grid.worldMax <span style="color:#f92672">=</span> worldBound.max;
+</span></span><span style="display:flex;"><span>    grid.cellSize <span style="color:#f92672">=</span> cellSize;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate grid dimensions
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 worldSize <span style="color:#f92672">=</span> vec2_sub(worldBound.max, worldBound.min);
+</span></span><span style="display:flex;"><span>    grid.numRows <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>(worldSize.x <span style="color:#f92672">/</span> cellSize);
+</span></span><span style="display:flex;"><span>    grid.numCols <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>(worldSize.y <span style="color:#f92672">/</span> cellSize);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Initialize cells
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    grid.cells.resize(grid.numRows <span style="color:#f92672">*</span> grid.numCols);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This function:</p>
+<ol>
+<li>Sets the grid boundaries based on world bounds</li>
+<li>Sets the cell size (important for performance tuning)</li>
+<li>Calculates how many rows and columns we need</li>
+<li>Resizes the cells vector to accommodate all cells</li>
+</ol>
+<h3 id="grid-operations">Grid Operations</h3>
+<p>Converting 2D grid coordinates to 1D array index:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getCellIndex</span>(<span style="color:#66d9ef">const</span> Grid <span style="color:#f92672">&amp;</span>grid, <span style="color:#66d9ef">int</span> row, <span style="color:#66d9ef">int</span> col) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> row <span style="color:#f92672">*</span> grid.numCols <span style="color:#f92672">+</span> col;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Converting world position to grid coordinates:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">getGridCell</span>(<span style="color:#66d9ef">const</span> Grid <span style="color:#f92672">&amp;</span>grid, <span style="color:#66d9ef">const</span> vec2 <span style="color:#f92672">&amp;</span>position, <span style="color:#66d9ef">int</span> <span style="color:#f92672">&amp;</span>row, <span style="color:#66d9ef">int</span> <span style="color:#f92672">&amp;</span>col) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate relative position from world minimum
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 relativePos <span style="color:#f92672">=</span> vec2_sub(position, grid.worldMin);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Convert to grid coordinates
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    col <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>(relativePos.x <span style="color:#f92672">/</span> grid.cellSize);
+</span></span><span style="display:flex;"><span>    row <span style="color:#f92672">=</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">&gt;</span>(relativePos.y <span style="color:#f92672">/</span> grid.cellSize);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Clamp to grid boundaries
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    col <span style="color:#f92672">=</span> max(<span style="color:#ae81ff">0</span>, min(col, grid.numCols <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>    row <span style="color:#f92672">=</span> max(<span style="color:#ae81ff">0</span>, min(row, grid.numRows <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>));
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This function:</p>
+<ol>
+<li>Calculates position relative to grid origin (worldMin)</li>
+<li>Divides by cell size to get grid coordinates</li>
+<li>Clamps values to ensure they&rsquo;re within grid bounds</li>
+</ol>
+<h3 id="inserting-bodies-into-the-grid">Inserting Bodies into the Grid</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insertBodyIntoGrid</span>(Grid <span style="color:#f92672">&amp;</span>grid, <span style="color:#66d9ef">int</span> bodyIndex, <span style="color:#66d9ef">const</span> Body <span style="color:#f92672">&amp;</span>body) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Get body&#39;s bounding box
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    AABB bounds <span style="color:#f92672">=</span> getShapeBoundingBox(body);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate grid cells that contain the body
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> startRow, startCol, endRow, endCol;
+</span></span><span style="display:flex;"><span>    getGridCell(grid, bounds.min, startRow, startCol);
+</span></span><span style="display:flex;"><span>    getGridCell(grid, bounds.max, endRow, endCol);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Insert body index into all overlapping cells
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> row <span style="color:#f92672">=</span> startRow; row <span style="color:#f92672">&lt;=</span> endRow; <span style="color:#f92672">++</span>row) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> col <span style="color:#f92672">=</span> startCol; col <span style="color:#f92672">&lt;=</span> endCol; <span style="color:#f92672">++</span>col) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> cellIndex <span style="color:#f92672">=</span> getCellIndex(grid, row, col);
+</span></span><span style="display:flex;"><span>            grid.cells[cellIndex].bodyIndex.push_back(bodyIndex);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This function:</p>
+<ol>
+<li>Gets the body&rsquo;s AABB (bounding box)</li>
+<li>Determines which grid cells the AABB overlaps</li>
+<li>Adds the body&rsquo;s index to all overlapping cells</li>
+<li>A body can be in multiple cells if it spans cell boundaries</li>
+</ol>
+<h3 id="updating-the-broad-phase">Updating the Broad Phase</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">updateBroadPhase</span>(Grid <span style="color:#f92672">&amp;</span>grid, <span style="color:#66d9ef">const</span> vector<span style="color:#f92672">&lt;</span>Body<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>bodies) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Clear previous frame&#39;s data
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    clearGrid(grid);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Insert active bodies into grid
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (size_t i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> bodies.size(); <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (bodies[i].isActive) {
+</span></span><span style="display:flex;"><span>            insertBodyIntoGrid(grid, i, bodies[i]);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="8-collision-detection-system">8. Collision Detection System</h2>
+<h3 id="broad-phase-collision-detection">Broad Phase Collision Detection</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">BroadPhaseCollisionPair</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> bodyA;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> bodyB;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>vector<span style="color:#f92672">&lt;</span>BroadPhaseCollisionPair<span style="color:#f92672">&gt;</span> getPotentialCollisionPairs(<span style="color:#66d9ef">const</span> Grid <span style="color:#f92672">&amp;</span>grid) {
+</span></span><span style="display:flex;"><span>    vector<span style="color:#f92672">&lt;</span>BroadPhaseCollisionPair<span style="color:#f92672">&gt;</span> pairs;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Helper function to create unique pair key
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">auto</span> createPairKey <span style="color:#f92672">=</span> [](<span style="color:#66d9ef">int</span> id1, <span style="color:#66d9ef">int</span> id2) <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">uint64_t</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (id1 <span style="color:#f92672">&gt;</span> id2)
+</span></span><span style="display:flex;"><span>            swap(id1, id2);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">uint64_t</span><span style="color:#f92672">&gt;</span>(id1) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">32</span>) <span style="color:#f92672">|</span> <span style="color:#66d9ef">static_cast</span><span style="color:#f92672">&lt;</span><span style="color:#66d9ef">uint64_t</span><span style="color:#f92672">&gt;</span>(id2);
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Track pairs we&#39;ve already checked
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    unordered_set<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">uint64_t</span><span style="color:#f92672">&gt;</span> addedPairs;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Check each cell
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> row <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; row <span style="color:#f92672">&lt;</span> grid.numRows; <span style="color:#f92672">++</span>row) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> col <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; col <span style="color:#f92672">&lt;</span> grid.numCols; <span style="color:#f92672">++</span>col) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span> <span style="color:#f92672">&amp;</span>currentCell <span style="color:#f92672">=</span> grid.cells[getCellIndex(grid, row, col)];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Check pairs within the same cell
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">for</span> (size_t i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> currentCell.bodyIndex.size(); <span style="color:#f92672">++</span>i) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> (size_t j <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>; j <span style="color:#f92672">&lt;</span> currentCell.bodyIndex.size(); <span style="color:#f92672">++</span>j) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">int</span> id1 <span style="color:#f92672">=</span> currentCell.bodyIndex[i];
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">int</span> id2 <span style="color:#f92672">=</span> currentCell.bodyIndex[j];
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">uint64_t</span> pairKey <span style="color:#f92672">=</span> createPairKey(id1, id2);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">// Add only if we haven&#39;t seen this pair before
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">if</span> (addedPairs.insert(pairKey).second) {
+</span></span><span style="display:flex;"><span>                        pairs.push_back({id1, id2});
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Direction vectors for neighboring cells
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> dx[] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>};
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">int</span> dy[] <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Check neighboring cells
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> dir <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; dir <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">4</span>; <span style="color:#f92672">++</span>dir) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">int</span> newCol <span style="color:#f92672">=</span> col <span style="color:#f92672">+</span> dx[dir];
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">int</span> newRow <span style="color:#f92672">=</span> row <span style="color:#f92672">+</span> dy[dir];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// Skip if neighbor is out of bounds
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> (newCol <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> newCol <span style="color:#f92672">&lt;</span> grid.numCols <span style="color:#f92672">&amp;&amp;</span> 
+</span></span><span style="display:flex;"><span>                    newRow <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> newRow <span style="color:#f92672">&lt;</span> grid.numRows) {
+</span></span><span style="display:flex;"><span>                    
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span> <span style="color:#f92672">&amp;</span>adjacentCell <span style="color:#f92672">=</span> 
+</span></span><span style="display:flex;"><span>                        grid.cells[getCellIndex(grid, newRow, newCol)];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">// Check pairs between current cell and neighbor
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> id1 : currentCell.bodyIndex) {
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> id2 : adjacentCell.bodyIndex) {
+</span></span><span style="display:flex;"><span>                            <span style="color:#66d9ef">uint64_t</span> pairKey <span style="color:#f92672">=</span> createPairKey(id1, id2);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                            <span style="color:#66d9ef">if</span> (addedPairs.insert(pairKey).second) {
+</span></span><span style="display:flex;"><span>                                pairs.push_back({id1, id2});
+</span></span><span style="display:flex;"><span>                            }
+</span></span><span style="display:flex;"><span>                        }
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> pairs;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This broad phase collision detection:</p>
+<ol>
+<li>Examines each grid cell</li>
+<li>Checks for potential collisions between bodies in the same cell</li>
+<li>Checks neighboring cells for additional potential collisions</li>
+<li>Uses a hash set to prevent duplicate pairs</li>
+<li>Returns all potential collision pairs for detailed checking</li>
+</ol>
+<h3 id="narrow-phase-collision-detection">Narrow Phase Collision Detection</h3>
+<p>First, let&rsquo;s implement the basic collision checks for different shape combinations:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">circleCircleCollision</span>(<span style="color:#66d9ef">const</span> Circle <span style="color:#f92672">&amp;</span>c1, <span style="color:#66d9ef">const</span> Circle <span style="color:#f92672">&amp;</span>c2) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate vector between centers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 diff <span style="color:#f92672">=</span> vec2_sub(c1.center, c2.center);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Compare squared distances (avoid square root)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> distSq <span style="color:#f92672">=</span> vec2_length_squared(diff);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> radiusSum <span style="color:#f92672">=</span> c1.radius <span style="color:#f92672">+</span> c2.radius;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> distSq <span style="color:#f92672">&lt;=</span> radiusSum <span style="color:#f92672">*</span> radiusSum;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">aabbAabbCollision</span>(<span style="color:#66d9ef">const</span> AABB <span style="color:#f92672">&amp;</span>aabb1, <span style="color:#66d9ef">const</span> AABB <span style="color:#f92672">&amp;</span>aabb2) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Check for overlap on each axis
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (aabb1.max.x <span style="color:#f92672">&lt;</span> aabb2.min.x <span style="color:#f92672">||</span> aabb1.min.x <span style="color:#f92672">&gt;</span> aabb2.max.x)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> false;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (aabb1.max.y <span style="color:#f92672">&lt;</span> aabb2.min.y <span style="color:#f92672">||</span> aabb1.min.y <span style="color:#f92672">&gt;</span> aabb2.max.y)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> false;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> true;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">circleAabbCollision</span>(<span style="color:#66d9ef">const</span> Circle <span style="color:#f92672">&amp;</span>c, <span style="color:#66d9ef">const</span> AABB <span style="color:#f92672">&amp;</span>aabb) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Find closest point on AABB to circle center
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> closestX <span style="color:#f92672">=</span> max(aabb.min.x, min(c.center.x, aabb.max.x));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> closestY <span style="color:#f92672">=</span> max(aabb.min.y, min(c.center.y, aabb.max.y));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate squared distance to closest point
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> distanceX <span style="color:#f92672">=</span> c.center.x <span style="color:#f92672">-</span> closestX;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> distanceY <span style="color:#f92672">=</span> c.center.y <span style="color:#f92672">-</span> closestY;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> distanceSquared <span style="color:#f92672">=</span> distanceX <span style="color:#f92672">*</span> distanceX <span style="color:#f92672">+</span> distanceY <span style="color:#f92672">*</span> distanceY;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> distanceSquared <span style="color:#f92672">&lt;=</span> (c.radius <span style="color:#f92672">*</span> c.radius);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Then we combine these in a general collision check function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">checkCollision</span>(<span style="color:#66d9ef">const</span> Body <span style="color:#f92672">&amp;</span>bodyA, <span style="color:#66d9ef">const</span> Body <span style="color:#f92672">&amp;</span>bodyB) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (bodyA.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE <span style="color:#f92672">&amp;&amp;</span> 
+</span></span><span style="display:flex;"><span>        bodyB.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> circleCircleCollision(bodyA.shape.circle, bodyB.shape.circle);
+</span></span><span style="display:flex;"><span>    } 
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (bodyA.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_AABB <span style="color:#f92672">&amp;&amp;</span> 
+</span></span><span style="display:flex;"><span>             bodyB.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_AABB) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> aabbAabbCollision(bodyA.shape.aabb, bodyB.shape.aabb);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (bodyA.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE <span style="color:#f92672">&amp;&amp;</span> 
+</span></span><span style="display:flex;"><span>             bodyB.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_AABB) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> circleAabbCollision(bodyA.shape.circle, bodyB.shape.aabb);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (bodyA.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_AABB <span style="color:#f92672">&amp;&amp;</span> 
+</span></span><span style="display:flex;"><span>             bodyB.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> circleAabbCollision(bodyB.shape.circle, bodyA.shape.aabb);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> false;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Finally, we filter the potential collision pairs to find actual collisions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>vector<span style="color:#f92672">&lt;</span>BroadPhaseCollisionPair<span style="color:#f92672">&gt;</span> getActualCollisions(
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> vector<span style="color:#f92672">&lt;</span>BroadPhaseCollisionPair<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>potentialPairs,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> vector<span style="color:#f92672">&lt;</span>Body<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>bodies) {
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    vector<span style="color:#f92672">&lt;</span>BroadPhaseCollisionPair<span style="color:#f92672">&gt;</span> actualCollisions;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span> <span style="color:#f92672">&amp;</span>pair : potentialPairs) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> Body <span style="color:#f92672">&amp;</span>bodyA <span style="color:#f92672">=</span> bodies[pair.bodyA];
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> Body <span style="color:#f92672">&amp;</span>bodyB <span style="color:#f92672">=</span> bodies[pair.bodyB];
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (checkCollision(bodyA, bodyB)) {
+</span></span><span style="display:flex;"><span>            actualCollisions.push_back(pair);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> actualCollisions;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="9-collision-resolution-system">9. Collision Resolution System</h2>
+<h3 id="understanding-collision-resolution">Understanding Collision Resolution</h3>
+<p>Before diving into the code, let&rsquo;s understand the key concepts of collision resolution:</p>
+<ol>
+<li>
+<p><strong>Collision Response</strong>: When two bodies collide, we need to:</p>
+<ul>
+<li>Calculate impulse forces to change their velocities</li>
+<li>Prevent bodies from interpenetrating</li>
+<li>Apply friction and restitution effects</li>
+</ul>
+</li>
+<li>
+<p><strong>Impulse-Based Physics</strong>:</p>
+<ul>
+<li>Uses instantaneous changes in velocity</li>
+<li>Preserves momentum and energy (with restitution)</li>
+<li>More stable than force-based methods for collisions</li>
+</ul>
+</li>
+<li>
+<p><strong>Position Correction</strong>:</p>
+<ul>
+<li>Prevents objects from sinking into each other</li>
+<li>Maintains simulation stability</li>
+<li>Uses a percentage-based correction factor</li>
+</ul>
+</li>
+</ol>
+<h3 id="circle-circle-collision-resolution">Circle-Circle Collision Resolution</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">resolveCircleCircleCollision</span>(Body <span style="color:#f92672">&amp;</span>a, Body <span style="color:#f92672">&amp;</span>b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate collision vector
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 distance <span style="color:#f92672">=</span> vec2_sub(b.position, a.position);
+</span></span><span style="display:flex;"><span>    vec2 normalVector <span style="color:#f92672">=</span> distance;
+</span></span><span style="display:flex;"><span>    vec2_normalize(normalVector);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate collision tangent for friction
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 tangentVector <span style="color:#f92672">=</span> {<span style="color:#f92672">-</span><span style="color:#ae81ff">1.0</span> <span style="color:#f92672">*</span> normalVector.y, normalVector.x};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate relative velocity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 relativeVelocity <span style="color:#f92672">=</span> vec2_sub(b.velocity, a.velocity);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> velocitySeperation <span style="color:#f92672">=</span> vec2_dot(relativeVelocity, normalVector);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Skip if objects are moving apart
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (velocitySeperation <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate impulse scalar
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> impulse <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1.0</span> <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> e) <span style="color:#f92672">/</span> (a.inverseMass <span style="color:#f92672">+</span> b.inverseMass) 
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">*</span> velocitySeperation;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Apply impulse along normal vector
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    a.velocity <span style="color:#f92672">=</span> vec2_sub(a.velocity, 
+</span></span><span style="display:flex;"><span>                         vec2_mul(normalVector, impulse <span style="color:#f92672">*</span> a.inverseMass));
+</span></span><span style="display:flex;"><span>    b.velocity <span style="color:#f92672">=</span> vec2_add(b.velocity, 
+</span></span><span style="display:flex;"><span>                         vec2_mul(normalVector, impulse <span style="color:#f92672">*</span> b.inverseMass));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Position correction to prevent sinking
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> k <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.4</span>; <span style="color:#75715e">// position correction factor
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> totalRadius <span style="color:#f92672">=</span> a.shape.circle.radius <span style="color:#f92672">+</span> b.shape.circle.radius;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> penetrationDepth <span style="color:#f92672">=</span> totalRadius <span style="color:#f92672">-</span> vec2_length(distance);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (penetrationDepth <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>        vec2 correction <span style="color:#f92672">=</span> vec2_mul(
+</span></span><span style="display:flex;"><span>            normalVector,
+</span></span><span style="display:flex;"><span>            (k <span style="color:#f92672">*</span> penetrationDepth) <span style="color:#f92672">/</span> (a.inverseMass <span style="color:#f92672">+</span> b.inverseMass)
+</span></span><span style="display:flex;"><span>        );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Only move if body isn&#39;t static
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>a.isStatic) {
+</span></span><span style="display:flex;"><span>            a.position <span style="color:#f92672">=</span> vec2_sub(a.position, 
+</span></span><span style="display:flex;"><span>                                vec2_mul(correction, a.inverseMass));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>b.isStatic) {
+</span></span><span style="display:flex;"><span>            b.position <span style="color:#f92672">=</span> vec2_add(b.position, 
+</span></span><span style="display:flex;"><span>                                vec2_mul(correction, b.inverseMass));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Let&rsquo;s break down the circle-circle collision resolution:</p>
+<ol>
+<li>
+<p><strong>Normal Vector Calculation</strong>:</p>
+<ul>
+<li>Calculate vector between circle centers</li>
+<li>Normalize it to get collision normal</li>
+<li>Calculate tangent vector for friction calculations</li>
+</ul>
+</li>
+<li>
+<p><strong>Velocity Resolution</strong>:</p>
+<ul>
+<li>Calculate relative velocity between bodies</li>
+<li>Project velocity onto normal vector</li>
+<li>Check if objects are moving apart (early exit if true)</li>
+</ul>
+</li>
+<li>
+<p><strong>Impulse Calculation</strong>:</p>
+<ul>
+<li>Use coefficient of restitution (e)</li>
+<li>Consider inverse masses for proper impulse distribution</li>
+<li>Apply impulse to both bodies&rsquo; velocities</li>
+</ul>
+</li>
+<li>
+<p><strong>Position Correction</strong>:</p>
+<ul>
+<li>Calculate penetration depth</li>
+<li>Apply correction based on mass ratio</li>
+<li>Use correction factor (k) to prevent overshooting</li>
+</ul>
+</li>
+</ol>
+<h3 id="aabb-aabb-collision-resolution">AABB-AABB Collision Resolution</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">resolveAABBCollision</span>(Body <span style="color:#f92672">&amp;</span>a, Body <span style="color:#f92672">&amp;</span>b) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate centers and half-sizes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 centerA <span style="color:#f92672">=</span> a.position;
+</span></span><span style="display:flex;"><span>    vec2 centerB <span style="color:#f92672">=</span> b.position;
+</span></span><span style="display:flex;"><span>    vec2 halfSizeA <span style="color:#f92672">=</span> vec2_mul(
+</span></span><span style="display:flex;"><span>        vec2_sub(a.shape.aabb.max, a.shape.aabb.min), 
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0.5</span>
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>    vec2 halfSizeB <span style="color:#f92672">=</span> vec2_mul(
+</span></span><span style="display:flex;"><span>        vec2_sub(b.shape.aabb.max, b.shape.aabb.min), 
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0.5</span>
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate delta between centers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 delta <span style="color:#f92672">=</span> vec2_sub(centerB, centerA);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate overlap on each axis
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 overlap <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        halfSizeA.x <span style="color:#f92672">+</span> halfSizeB.x <span style="color:#f92672">-</span> fabs(delta.x),
+</span></span><span style="display:flex;"><span>        halfSizeA.y <span style="color:#f92672">+</span> halfSizeB.y <span style="color:#f92672">-</span> fabs(delta.y)
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Determine collision normal based on smallest overlap
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 normal;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> penetration;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (overlap.x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> overlap.y <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (overlap.x <span style="color:#f92672">&lt;</span> overlap.y) {
+</span></span><span style="display:flex;"><span>            normal <span style="color:#f92672">=</span> (delta.x <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">?</span> 
+</span></span><span style="display:flex;"><span>                    (vec2){<span style="color:#f92672">-</span><span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">0.0</span>} <span style="color:#f92672">:</span> (vec2){<span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">0.0</span>};
+</span></span><span style="display:flex;"><span>            penetration <span style="color:#f92672">=</span> overlap.x;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            normal <span style="color:#f92672">=</span> (delta.y <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">?</span> 
+</span></span><span style="display:flex;"><span>                    (vec2){<span style="color:#ae81ff">0.0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1.0</span>} <span style="color:#f92672">:</span> (vec2){<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">1.0</span>};
+</span></span><span style="display:flex;"><span>            penetration <span style="color:#f92672">=</span> overlap.y;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Calculate relative velocity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        vec2 relativeVel <span style="color:#f92672">=</span> vec2_sub(b.velocity, a.velocity);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> normalVel <span style="color:#f92672">=</span> vec2_dot(relativeVel, normal);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Early exit for objects moving apart
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> MIN_VELOCITY <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.01</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (normalVel <span style="color:#f92672">&gt;</span> <span style="color:#f92672">-</span>MIN_VELOCITY) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Objects moving apart or too slow - just correct position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>a.isStatic) {
+</span></span><span style="display:flex;"><span>                a.position <span style="color:#f92672">=</span> vec2_sub(a.position, 
+</span></span><span style="display:flex;"><span>                                    vec2_mul(normal, penetration <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.5</span>));
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>b.isStatic) {
+</span></span><span style="display:flex;"><span>                b.position <span style="color:#f92672">=</span> vec2_add(b.position, 
+</span></span><span style="display:flex;"><span>                                    vec2_mul(normal, penetration <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.5</span>));
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Calculate impulse
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> RESTITUTION <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.3</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> totalInverseMass <span style="color:#f92672">=</span> a.inverseMass <span style="color:#f92672">+</span> b.inverseMass;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (totalInverseMass <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Apply restitution based on velocity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">double</span> restitution <span style="color:#f92672">=</span> vec2_length(relativeVel) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2.0</span> <span style="color:#f92672">?</span> 
+</span></span><span style="display:flex;"><span>                            <span style="color:#ae81ff">0.0</span> <span style="color:#f92672">:</span> RESTITUTION;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> j <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>(<span style="color:#ae81ff">1.0</span> <span style="color:#f92672">+</span> restitution) <span style="color:#f92672">*</span> normalVel <span style="color:#f92672">/</span> totalInverseMass;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Apply impulse
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        vec2 impulse <span style="color:#f92672">=</span> vec2_mul(normal, j);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>a.isStatic) {
+</span></span><span style="display:flex;"><span>            a.velocity <span style="color:#f92672">=</span> vec2_sub(a.velocity, 
+</span></span><span style="display:flex;"><span>                                vec2_mul(impulse, a.inverseMass));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>b.isStatic) {
+</span></span><span style="display:flex;"><span>            b.velocity <span style="color:#f92672">=</span> vec2_add(b.velocity, 
+</span></span><span style="display:flex;"><span>                                vec2_mul(impulse, b.inverseMass));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Apply friction
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> FRICTION <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.4</span>;
+</span></span><span style="display:flex;"><span>        vec2 tangent <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>            relativeVel.x <span style="color:#f92672">-</span> normalVel <span style="color:#f92672">*</span> normal.x,
+</span></span><span style="display:flex;"><span>            relativeVel.y <span style="color:#f92672">-</span> normalVel <span style="color:#f92672">*</span> normal.y
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> tangentLen <span style="color:#f92672">=</span> vec2_length(tangent);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (tangentLen <span style="color:#f92672">&gt;</span> MIN_VELOCITY) {
+</span></span><span style="display:flex;"><span>            tangent <span style="color:#f92672">=</span> vec2_mul(tangent, <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> tangentLen);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">double</span> jt <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>vec2_dot(relativeVel, tangent) <span style="color:#f92672">/</span> totalInverseMass;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Apply friction impulse
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            vec2 frictionImpulse <span style="color:#f92672">=</span> vec2_mul(tangent, jt <span style="color:#f92672">*</span> FRICTION);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>a.isStatic) {
+</span></span><span style="display:flex;"><span>                a.velocity <span style="color:#f92672">=</span> vec2_sub(a.velocity, 
+</span></span><span style="display:flex;"><span>                                    vec2_mul(frictionImpulse, a.inverseMass));
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>b.isStatic) {
+</span></span><span style="display:flex;"><span>                b.velocity <span style="color:#f92672">=</span> vec2_add(b.velocity, 
+</span></span><span style="display:flex;"><span>                                    vec2_mul(frictionImpulse, b.inverseMass));
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Position correction
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> CORRECTION_PERCENT <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.8</span>;
+</span></span><span style="display:flex;"><span>        vec2 correction <span style="color:#f92672">=</span> vec2_mul(
+</span></span><span style="display:flex;"><span>            normal,
+</span></span><span style="display:flex;"><span>            (penetration <span style="color:#f92672">/</span> totalInverseMass) <span style="color:#f92672">*</span> CORRECTION_PERCENT
+</span></span><span style="display:flex;"><span>        );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>a.isStatic) {
+</span></span><span style="display:flex;"><span>            a.position <span style="color:#f92672">=</span> vec2_sub(a.position, 
+</span></span><span style="display:flex;"><span>                                vec2_mul(correction, a.inverseMass));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>b.isStatic) {
+</span></span><span style="display:flex;"><span>            b.position <span style="color:#f92672">=</span> vec2_add(b.position, 
+</span></span><span style="display:flex;"><span>                                vec2_mul(correction, b.inverseMass));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Update AABB positions
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>a.isStatic) {
+</span></span><span style="display:flex;"><span>            vec2 halfSize <span style="color:#f92672">=</span> vec2_mul(
+</span></span><span style="display:flex;"><span>                vec2_sub(a.shape.aabb.max, a.shape.aabb.min), 
+</span></span><span style="display:flex;"><span>                <span style="color:#ae81ff">0.5</span>
+</span></span><span style="display:flex;"><span>            );
+</span></span><span style="display:flex;"><span>            a.shape.aabb.min <span style="color:#f92672">=</span> vec2_sub(a.position, halfSize);
+</span></span><span style="display:flex;"><span>            a.shape.aabb.max <span style="color:#f92672">=</span> vec2_add(a.position, halfSize);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>b.isStatic) {
+</span></span><span style="display:flex;"><span>            vec2 halfSize <span style="color:#f92672">=</span> vec2_mul(
+</span></span><span style="display:flex;"><span>                vec2_sub(b.shape.aabb.max, b.shape.aabb.min), 
+</span></span><span style="display:flex;"><span>                <span style="color:#ae81ff">0.5</span>
+</span></span><span style="display:flex;"><span>            );
+</span></span><span style="display:flex;"><span>            b.shape.aabb.min <span style="color:#f92672">=</span> vec2_sub(b.position, halfSize);
+</span></span><span style="display:flex;"><span>            b.shape.aabb.max <span style="color:#f92672">=</span> vec2_add(b.position, halfSize);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>The AABB collision resolution process:</p>
+<ol>
+<li>
+<p><strong>Contact Point Determination</strong>:</p>
+<ul>
+<li>Calculate box centers and half-sizes</li>
+<li>Find overlap on each axis</li>
+<li>Choose collision normal based on minimum overlap</li>
+</ul>
+</li>
+<li>
+<p><strong>Collision Response</strong>:</p>
+<ul>
+<li>Calculate relative velocity</li>
+<li>Apply restitution based on velocity magnitude</li>
+<li>Calculate and apply impulse</li>
+<li>Handle friction using tangential impulse</li>
+</ul>
+</li>
+<li>
+<p><strong>Advanced Features</strong>:</p>
+<ul>
+<li>Velocity threshold for static friction</li>
+<li>Variable restitution based on impact velocity</li>
+<li>Proper handling of static objects</li>
+</ul>
+</li>
+<li>
+<p><strong>Position Updates</strong>:</p>
+<ul>
+<li>Correct positions to prevent sinking</li>
+<li>Update AABB boundaries</li>
+<li>Maintain object separation</li>
+</ul>
+</li>
+</ol>
+<h2 id="10-circle-aabb-collision-resolution">10. Circle-AABB Collision Resolution</h2>
+<h3 id="understanding-circle-aabb-collisions">Understanding Circle-AABB Collisions</h3>
+<p>Circle-AABB collisions are more complex because:</p>
+<ul>
+<li>They involve different shape types</li>
+<li>Contact points need special calculation</li>
+<li>Normal calculation varies based on circle position</li>
+<li>Edge cases need careful handling</li>
+</ul>
+<h3 id="implementation">Implementation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">resolveCircleAABBCollision</span>(Body <span style="color:#f92672">&amp;</span>circleBody, Body <span style="color:#f92672">&amp;</span>aabbBody, 
+</span></span><span style="display:flex;"><span>                               <span style="color:#66d9ef">bool</span> circleIsA) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Validate shape types
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (circleBody.shapeType <span style="color:#f92672">!=</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE <span style="color:#f92672">||</span> 
+</span></span><span style="display:flex;"><span>        aabbBody.shapeType <span style="color:#f92672">!=</span> Body<span style="color:#f92672">::</span>SHAPE_AABB) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 1. Find closest point on AABB to circle center
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 closestPoint <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        max(aabbBody.shape.aabb.min.x,
+</span></span><span style="display:flex;"><span>            min(circleBody.position.x, aabbBody.shape.aabb.max.x)),
+</span></span><span style="display:flex;"><span>        max(aabbBody.shape.aabb.min.y,
+</span></span><span style="display:flex;"><span>            min(circleBody.position.y, aabbBody.shape.aabb.max.y))
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 2. Calculate distance vector from closest point to circle center
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 distance <span style="color:#f92672">=</span> vec2_sub(circleBody.position, closestPoint);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> distanceMag <span style="color:#f92672">=</span> vec2_length(distance);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Skip if no collision
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (distanceMag <span style="color:#f92672">&gt;</span> circleBody.shape.circle.radius) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 3. Calculate normal vector
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 normal;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> EPSILON <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0001</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (distanceMag <span style="color:#f92672">&lt;</span> EPSILON) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Circle center is inside AABB, use vector from AABB center to circle
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        vec2 aabbCenter <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>            (aabbBody.shape.aabb.min.x <span style="color:#f92672">+</span> aabbBody.shape.aabb.max.x) <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.5</span>,
+</span></span><span style="display:flex;"><span>            (aabbBody.shape.aabb.min.y <span style="color:#f92672">+</span> aabbBody.shape.aabb.max.y) <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.5</span>
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>        distance <span style="color:#f92672">=</span> vec2_sub(circleBody.position, aabbCenter);
+</span></span><span style="display:flex;"><span>        distanceMag <span style="color:#f92672">=</span> vec2_length(distance);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (distanceMag <span style="color:#f92672">&lt;</span> EPSILON) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Objects are at same position, use arbitrary normal
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            normal <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">1.0</span>};
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            normal <span style="color:#f92672">=</span> vec2_mul(distance, <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> distanceMag);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        normal <span style="color:#f92672">=</span> vec2_mul(distance, <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> distanceMag);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 4. Calculate penetration depth
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> penetrationDepth <span style="color:#f92672">=</span> circleBody.shape.circle.radius <span style="color:#f92672">-</span> distanceMag;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 5. Calculate relative velocity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 relativeVel <span style="color:#f92672">=</span> vec2_sub(circleBody.velocity, aabbBody.velocity);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> impactSpeed <span style="color:#f92672">=</span> vec2_dot(relativeVel, normal);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Skip if objects are moving apart
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> MIN_VELOCITY <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.01</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (impactSpeed <span style="color:#f92672">&gt;</span> <span style="color:#f92672">-</span>MIN_VELOCITY) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Objects moving apart or too slow - just correct position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> POSITION_CORRECTION <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.8</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">double</span> totalInverseMass <span style="color:#f92672">=</span> circleBody.inverseMass <span style="color:#f92672">+</span> aabbBody.inverseMass;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (totalInverseMass <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>            vec2 correction <span style="color:#f92672">=</span> vec2_mul(normal, 
+</span></span><span style="display:flex;"><span>                (penetrationDepth <span style="color:#f92672">/</span> totalInverseMass) <span style="color:#f92672">*</span> POSITION_CORRECTION);
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>circleBody.isStatic) {
+</span></span><span style="display:flex;"><span>                circleBody.position <span style="color:#f92672">=</span> vec2_add(circleBody.position, 
+</span></span><span style="display:flex;"><span>                    vec2_mul(correction, circleBody.inverseMass));
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>aabbBody.isStatic) {
+</span></span><span style="display:flex;"><span>                aabbBody.position <span style="color:#f92672">=</span> vec2_sub(aabbBody.position, 
+</span></span><span style="display:flex;"><span>                    vec2_mul(correction, aabbBody.inverseMass));
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 6. Calculate collision response
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> totalInverseMass <span style="color:#f92672">=</span> circleBody.inverseMass <span style="color:#f92672">+</span> aabbBody.inverseMass;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (totalInverseMass <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Apply restitution based on impact speed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> restitution <span style="color:#f92672">=</span> vec2_length(relativeVel) <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2.0</span> <span style="color:#f92672">?</span> <span style="color:#ae81ff">0.0</span> <span style="color:#f92672">:</span> e;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> j <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>(<span style="color:#ae81ff">1.0</span> <span style="color:#f92672">+</span> restitution) <span style="color:#f92672">*</span> impactSpeed <span style="color:#f92672">/</span> totalInverseMass;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Apply impulse
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 impulse <span style="color:#f92672">=</span> vec2_mul(normal, j);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>circleBody.isStatic) {
+</span></span><span style="display:flex;"><span>        circleBody.velocity <span style="color:#f92672">=</span> vec2_add(circleBody.velocity, 
+</span></span><span style="display:flex;"><span>            vec2_mul(impulse, circleBody.inverseMass));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>aabbBody.isStatic) {
+</span></span><span style="display:flex;"><span>        aabbBody.velocity <span style="color:#f92672">=</span> vec2_sub(aabbBody.velocity, 
+</span></span><span style="display:flex;"><span>            vec2_mul(impulse, aabbBody.inverseMass));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 7. Apply friction
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> FRICTION <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.4</span>;
+</span></span><span style="display:flex;"><span>    vec2 tangent <span style="color:#f92672">=</span> {<span style="color:#f92672">-</span>normal.y, normal.x}; <span style="color:#75715e">// Perpendicular to normal
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> tangentSpeed <span style="color:#f92672">=</span> vec2_dot(relativeVel, tangent);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate and clamp friction impulse
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> frictionImpulse <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>tangentSpeed <span style="color:#f92672">/</span> totalInverseMass;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> maxFriction <span style="color:#f92672">=</span> FRICTION <span style="color:#f92672">*</span> fabs(j);
+</span></span><span style="display:flex;"><span>    frictionImpulse <span style="color:#f92672">=</span> max(<span style="color:#f92672">-</span>maxFriction, min(frictionImpulse, maxFriction));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    vec2 frictionVector <span style="color:#f92672">=</span> vec2_mul(tangent, frictionImpulse);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>circleBody.isStatic) {
+</span></span><span style="display:flex;"><span>        circleBody.velocity <span style="color:#f92672">=</span> vec2_add(circleBody.velocity, 
+</span></span><span style="display:flex;"><span>            vec2_mul(frictionVector, circleBody.inverseMass));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>aabbBody.isStatic) {
+</span></span><span style="display:flex;"><span>        aabbBody.velocity <span style="color:#f92672">=</span> vec2_sub(aabbBody.velocity, 
+</span></span><span style="display:flex;"><span>            vec2_mul(frictionVector, aabbBody.inverseMass));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 8. Update positions
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// Update circle position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>circleBody.isStatic) {
+</span></span><span style="display:flex;"><span>        circleBody.shape.circle.center <span style="color:#f92672">=</span> circleBody.position;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Update AABB position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>aabbBody.isStatic) {
+</span></span><span style="display:flex;"><span>        vec2 halfSize <span style="color:#f92672">=</span> vec2_mul(
+</span></span><span style="display:flex;"><span>            vec2_sub(aabbBody.shape.aabb.max, aabbBody.shape.aabb.min), 
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">0.5</span>
+</span></span><span style="display:flex;"><span>        );
+</span></span><span style="display:flex;"><span>        aabbBody.shape.aabb.min <span style="color:#f92672">=</span> vec2_sub(aabbBody.position, halfSize);
+</span></span><span style="display:flex;"><span>        aabbBody.shape.aabb.max <span style="color:#f92672">=</span> vec2_add(aabbBody.position, halfSize);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Key aspects of circle-AABB collision resolution:</p>
+<ol>
+<li>
+<p><strong>Contact Point Calculation</strong>:</p>
+<ul>
+<li>Find closest point on AABB to circle</li>
+<li>Handle special case when circle is inside AABB</li>
+<li>Calculate proper normal vector for collision response</li>
+</ul>
+</li>
+<li>
+<p><strong>Edge Cases</strong>:</p>
+<ul>
+<li>Circle center inside AABB</li>
+<li>Objects at exact same position</li>
+<li>Very small penetration depths</li>
+</ul>
+</li>
+<li>
+<p><strong>Physics Response</strong>:</p>
+<ul>
+<li>Variable restitution based on impact speed</li>
+<li>Friction calculation using tangential impulse</li>
+<li>Position correction to prevent sinking</li>
+</ul>
+</li>
+</ol>
+<h2 id="11-complete-collision-system-integration">11. Complete Collision System Integration</h2>
+<h3 id="collision-resolution-manager">Collision Resolution Manager</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">resolveCollisions</span>(vector<span style="color:#f92672">&lt;</span>BroadPhaseCollisionPair<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>collisions,
+</span></span><span style="display:flex;"><span>                      vector<span style="color:#f92672">&lt;</span>Body<span style="color:#f92672">&gt;</span> <span style="color:#f92672">&amp;</span>bodies) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span> <span style="color:#f92672">&amp;</span>pair : collisions) {
+</span></span><span style="display:flex;"><span>        Body <span style="color:#f92672">&amp;</span>bodyA <span style="color:#f92672">=</span> bodies[pair.bodyA];
+</span></span><span style="display:flex;"><span>        Body <span style="color:#f92672">&amp;</span>bodyB <span style="color:#f92672">=</span> bodies[pair.bodyB];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Choose appropriate resolution method based on shape types
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (bodyA.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE <span style="color:#f92672">&amp;&amp;</span> 
+</span></span><span style="display:flex;"><span>            bodyB.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE) {
+</span></span><span style="display:flex;"><span>            resolveCircleCircleCollision(bodyA, bodyB);
+</span></span><span style="display:flex;"><span>        } 
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (bodyA.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_AABB <span style="color:#f92672">&amp;&amp;</span> 
+</span></span><span style="display:flex;"><span>                 bodyB.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_AABB) {
+</span></span><span style="display:flex;"><span>            resolveAABBCollision(bodyA, bodyB);
+</span></span><span style="display:flex;"><span>        } 
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Handle circle-AABB collisions
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> (bodyA.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE) {
+</span></span><span style="display:flex;"><span>                resolveCircleAABBCollision(bodyA, bodyB, true);
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                resolveCircleAABBCollision(bodyB, bodyA, false);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="complete-physics-update-cycle">Complete Physics Update Cycle</h3>
+<p>Here&rsquo;s how all the systems work together:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">stepWorld</span>(World <span style="color:#f92672">&amp;</span>world, <span style="color:#66d9ef">double</span> dt) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (world.isPaused)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 1. Limit time step to prevent instability
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    dt <span style="color:#f92672">=</span> min(dt, world.config.maxDeltaTime);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 2. Apply forces and integrate motion
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> <span style="color:#f92672">&amp;</span>body : world.bodies) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (body.isActive) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Apply gravity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            applyGravity(body);
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Integrate forces
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            integrateLinearMotion(body, dt);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 3. Update spatial partitioning
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    updateBroadPhase(world.grid, world.bodies);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 4. Get potential collision pairs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">auto</span> potentialPairs <span style="color:#f92672">=</span> getPotentialCollisionPairs(world.grid);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 5. Perform narrow phase collision detection
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">auto</span> actualCollisions <span style="color:#f92672">=</span> getActualCollisions(potentialPairs, world.bodies);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 6. Resolve collisions
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    resolveCollisions(actualCollisions, world.bodies);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="12-performance-optimization-tips">12. Performance Optimization Tips</h2>
+<ol>
+<li>
+<p><strong>Spatial Partitioning Tuning</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// Adjust cell size based on average object size
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> optimalCellSize <span style="color:#f92672">=</span> averageObjectSize <span style="color:#f92672">*</span> <span style="color:#ae81ff">2.0</span>;
+</span></span><span style="display:flex;"><span>initGrid(world.grid, worldBound, optimalCellSize);
+</span></span></code></pre></div></li>
+<li>
+<p><strong>Avoiding Square Roots</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// Use squared distances when possible
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">double</span> distanceSquared <span style="color:#f92672">=</span> vec2_length_squared(diff);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">double</span> radiusSquared <span style="color:#f92672">=</span> radius <span style="color:#f92672">*</span> radius;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (distanceSquared <span style="color:#f92672">&lt;=</span> radiusSquared) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Collision detected
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div></li>
+<li>
+<p><strong>Reuse Vectors</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// Pre-allocate vectors to avoid reallocations
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>world.queryResultIndices.reserve(<span style="color:#ae81ff">100</span>);
+</span></span><span style="display:flex;"><span>grid.cells[cellIndex].bodyIndex.reserve(<span style="color:#ae81ff">10</span>);
+</span></span></code></pre></div></li>
+<li>
+<p><strong>Early Exit Conditions</strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// Skip static-static collisions
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (bodyA.isStatic <span style="color:#f92672">&amp;&amp;</span> bodyB.isStatic)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Skip if moving apart
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> (relativeVelocity <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span>;
+</span></span></code></pre></div></li>
+</ol>
+<h2 id="13-example-usage">13. Example Usage</h2>
+<h3 id="basic-setup-and-initialization">Basic Setup and Initialization</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Initialize the physics world
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    World world;
+</span></span><span style="display:flex;"><span>    WorldConfig config;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Configure world parameters
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    config.gravity <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0.0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">9.81</span>};  <span style="color:#75715e">// Standard Earth gravity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    config.maxDeltaTime <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.0</span><span style="color:#f92672">/</span><span style="color:#ae81ff">60.0</span>; <span style="color:#75715e">// 60 FPS simulation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    config.bounds <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>        {<span style="color:#f92672">-</span><span style="color:#ae81ff">50.0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">50.0</span>},  <span style="color:#75715e">// min bounds
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        {<span style="color:#ae81ff">50.0</span>, <span style="color:#ae81ff">50.0</span>}     <span style="color:#75715e">// max bounds
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    };
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    initWorld(world, config);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Example: Create ground
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 groundPos <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0.0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">45.0</span>};
+</span></span><span style="display:flex;"><span>    vec2 groundSize <span style="color:#f92672">=</span> {<span style="color:#ae81ff">100.0</span>, <span style="color:#ae81ff">10.0</span>};
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> groundId <span style="color:#f92672">=</span> addBox(world, groundPos, groundSize, <span style="color:#ae81ff">0.0</span>); <span style="color:#75715e">// mass = 0 makes it static
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Example: Add some dynamic bodies
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> circle1 <span style="color:#f92672">=</span> addCircle(world, {<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">10.0</span>}, <span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">1.0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> box1 <span style="color:#f92672">=</span> addBox(world, {<span style="color:#f92672">-</span><span style="color:#ae81ff">5.0</span>, <span style="color:#ae81ff">15.0</span>}, {<span style="color:#ae81ff">2.0</span>, <span style="color:#ae81ff">2.0</span>}, <span style="color:#ae81ff">1.0</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Main simulation loop
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> timeStep <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.0</span><span style="color:#f92672">/</span><span style="color:#ae81ff">60.0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#75715e">/* your game loop condition */</span>) {
+</span></span><span style="display:flex;"><span>        stepWorld(world, timeStep);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Render or process results
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="common-scenarios">Common Scenarios</h3>
+<h4 id="1-creating-a-stack-of-boxes">1. Creating a Stack of Boxes</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">createBoxStack</span>(World<span style="color:#f92672">&amp;</span> world, <span style="color:#66d9ef">int</span> numBoxes) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> boxSize <span style="color:#f92672">=</span> <span style="color:#ae81ff">2.0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> boxMass <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> startX <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> startY <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">40.0</span>;  <span style="color:#75715e">// Above ground level
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> numBoxes; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        vec2 position <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>            startX,
+</span></span><span style="display:flex;"><span>            startY <span style="color:#f92672">+</span> (i <span style="color:#f92672">*</span> boxSize <span style="color:#f92672">*</span> <span style="color:#ae81ff">1.1</span>)  <span style="color:#75715e">// Small gap between boxes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        };
+</span></span><span style="display:flex;"><span>        vec2 size <span style="color:#f92672">=</span> {boxSize, boxSize};
+</span></span><span style="display:flex;"><span>        addBox(world, position, size, boxMass);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h4 id="2-creating-a-pendulum">2. Creating a Pendulum</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">createPendulum</span>(World<span style="color:#f92672">&amp;</span> world) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Create anchor point (static box)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 anchorPos <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">10.0</span>};
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> anchor <span style="color:#f92672">=</span> addBox(world, anchorPos, {<span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">1.0</span>}, <span style="color:#ae81ff">0.0</span>);  <span style="color:#75715e">// Static
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Create pendulum bob (dynamic circle)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 bobPos <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">0.0</span>};
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> bob <span style="color:#f92672">=</span> addCircle(world, bobPos, <span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">1.0</span>);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Note: In a real implementation, you&#39;d need to add constraint/joint
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#75715e">// handling to connect the anchor and bob
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><h4 id="3-creating-a-newtons-cradle">3. Creating a Newton&rsquo;s Cradle</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">createNewtonsCradle</span>(World<span style="color:#f92672">&amp;</span> world, <span style="color:#66d9ef">int</span> numBalls) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> radius <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> mass <span style="color:#f92672">=</span> <span style="color:#ae81ff">1.0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> spacing <span style="color:#f92672">=</span> radius <span style="color:#f92672">*</span> <span style="color:#ae81ff">2.1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> startX <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>(numBalls <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">*</span> spacing <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">double</span> height <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> numBalls; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        vec2 position <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>            startX <span style="color:#f92672">+</span> (i <span style="color:#f92672">*</span> spacing),
+</span></span><span style="display:flex;"><span>            height
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> ball <span style="color:#f92672">=</span> addCircle(world, position, radius, mass);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Set initial velocity for first ball
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>            world.bodies[ball].velocity <span style="color:#f92672">=</span> {<span style="color:#ae81ff">5.0</span>, <span style="color:#ae81ff">0.0</span>};
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="14-testing-and-debugging">14. Testing and Debugging</h2>
+<h3 id="test-cases">Test Cases</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">PhysicsTest</span> {
+</span></span><span style="display:flex;"><span>    string name;
+</span></span><span style="display:flex;"><span>    function<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">void</span>(World<span style="color:#f92672">&amp;</span>)<span style="color:#f92672">&gt;</span> setup;
+</span></span><span style="display:flex;"><span>    function<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">bool</span>(<span style="color:#66d9ef">const</span> World<span style="color:#f92672">&amp;</span>)<span style="color:#f92672">&gt;</span> verify;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Example test case: Conservation of momentum
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>PhysicsTest <span style="color:#a6e22e">testConservationOfMomentum</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Conservation of Momentum Test&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Setup function
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        [](World<span style="color:#f92672">&amp;</span> world) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Create two colliding bodies
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> body1 <span style="color:#f92672">=</span> addCircle(world, {<span style="color:#f92672">-</span><span style="color:#ae81ff">5.0</span>, <span style="color:#ae81ff">0.0</span>}, <span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">1.0</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> body2 <span style="color:#f92672">=</span> addCircle(world, {<span style="color:#ae81ff">5.0</span>, <span style="color:#ae81ff">0.0</span>}, <span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">1.0</span>);
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Set initial velocities
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            world.bodies[body1].velocity <span style="color:#f92672">=</span> {<span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">0.0</span>};
+</span></span><span style="display:flex;"><span>            world.bodies[body2].velocity <span style="color:#f92672">=</span> {<span style="color:#f92672">-</span><span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">0.0</span>};
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Verification function
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        [](<span style="color:#66d9ef">const</span> World<span style="color:#f92672">&amp;</span> world) {
+</span></span><span style="display:flex;"><span>            vec2 totalMomentum <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">0.0</span>};
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> body : world.bodies) {
+</span></span><span style="display:flex;"><span>                vec2 momentum <span style="color:#f92672">=</span> vec2_mul(body.velocity, body.mass);
+</span></span><span style="display:flex;"><span>                totalMomentum <span style="color:#f92672">=</span> vec2_add(totalMomentum, momentum);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">double</span> momentumMagnitude <span style="color:#f92672">=</span> vec2_length(totalMomentum);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> momentumMagnitude <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0.01</span>;  <span style="color:#75715e">// Allow for small numerical errors
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Example test case: Energy conservation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>PhysicsTest <span style="color:#a6e22e">testEnergyConservation</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Energy Conservation Test&#34;</span>,
+</span></span><span style="display:flex;"><span>        [](World<span style="color:#f92672">&amp;</span> world) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Create a bouncing ball
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> ball <span style="color:#f92672">=</span> addCircle(world, {<span style="color:#ae81ff">0.0</span>, <span style="color:#ae81ff">10.0</span>}, <span style="color:#ae81ff">1.0</span>, <span style="color:#ae81ff">1.0</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Create ground
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> ground <span style="color:#f92672">=</span> addBox(world, {<span style="color:#ae81ff">0.0</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">10.0</span>}, {<span style="color:#ae81ff">20.0</span>, <span style="color:#ae81ff">1.0</span>}, <span style="color:#ae81ff">0.0</span>);
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        [](<span style="color:#66d9ef">const</span> World<span style="color:#f92672">&amp;</span> world) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">double</span> totalEnergy <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.0</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> body : world.bodies) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (body.isStatic) <span style="color:#66d9ef">continue</span>;
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// Kinetic energy
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">double</span> velocity_squared <span style="color:#f92672">=</span> vec2_length_squared(body.velocity);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">double</span> kinetic <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.5</span> <span style="color:#f92672">*</span> body.mass <span style="color:#f92672">*</span> velocity_squared;
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// Potential energy
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">double</span> height <span style="color:#f92672">=</span> body.position.y <span style="color:#f92672">+</span> <span style="color:#ae81ff">10.0</span>;  <span style="color:#75715e">// Relative to ground
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">double</span> potential <span style="color:#f92672">=</span> body.mass <span style="color:#f92672">*</span> <span style="color:#ae81ff">9.81</span> <span style="color:#f92672">*</span> height;
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                totalEnergy <span style="color:#f92672">+=</span> kinetic <span style="color:#f92672">+</span> potential;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">double</span> initialEnergy <span style="color:#f92672">=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (initialEnergy <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>) initialEnergy <span style="color:#f92672">=</span> totalEnergy;
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Allow for some energy loss due to restitution
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> totalEnergy <span style="color:#f92672">&lt;=</span> initialEnergy;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="debugging-helpers">Debugging Helpers</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">PhysicsDebugInfo</span> {
+</span></span><span style="display:flex;"><span>    vector<span style="color:#f92672">&lt;</span>string<span style="color:#f92672">&gt;</span> messages;
+</span></span><span style="display:flex;"><span>    vector<span style="color:#f92672">&lt;</span>vec2<span style="color:#f92672">&gt;</span> points;
+</span></span><span style="display:flex;"><span>    vector<span style="color:#f92672">&lt;</span>pair<span style="color:#f92672">&lt;</span>vec2, vec2<span style="color:#f92672">&gt;&gt;</span> lines;
+</span></span><span style="display:flex;"><span>    vector<span style="color:#f92672">&lt;</span>Circle<span style="color:#f92672">&gt;</span> circles;
+</span></span><span style="display:flex;"><span>    vector<span style="color:#f92672">&lt;</span>AABB<span style="color:#f92672">&gt;</span> boxes;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PhysicsDebugger</span> {
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> drawCollisionNormal(PhysicsDebugInfo<span style="color:#f92672">&amp;</span> debug, 
+</span></span><span style="display:flex;"><span>                                  <span style="color:#66d9ef">const</span> vec2<span style="color:#f92672">&amp;</span> point, 
+</span></span><span style="display:flex;"><span>                                  <span style="color:#66d9ef">const</span> vec2<span style="color:#f92672">&amp;</span> normal) {
+</span></span><span style="display:flex;"><span>        debug.points.push_back(point);
+</span></span><span style="display:flex;"><span>        debug.lines.push_back({
+</span></span><span style="display:flex;"><span>            point,
+</span></span><span style="display:flex;"><span>            vec2_add(point, vec2_mul(normal, <span style="color:#ae81ff">2.0</span>))
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">drawBody</span>(PhysicsDebugInfo<span style="color:#f92672">&amp;</span> debug, <span style="color:#66d9ef">const</span> Body<span style="color:#f92672">&amp;</span> body) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (body.shapeType <span style="color:#f92672">==</span> Body<span style="color:#f92672">::</span>SHAPE_CIRCLE) {
+</span></span><span style="display:flex;"><span>            debug.circles.push_back(body.shape.circle);
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            debug.boxes.push_back(body.shape.aabb);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">logCollision</span>(PhysicsDebugInfo<span style="color:#f92672">&amp;</span> debug, 
+</span></span><span style="display:flex;"><span>                           <span style="color:#66d9ef">const</span> Body<span style="color:#f92672">&amp;</span> a, 
+</span></span><span style="display:flex;"><span>                           <span style="color:#66d9ef">const</span> Body<span style="color:#f92672">&amp;</span> b, 
+</span></span><span style="display:flex;"><span>                           <span style="color:#66d9ef">const</span> vec2<span style="color:#f92672">&amp;</span> point) {
+</span></span><span style="display:flex;"><span>        string msg <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Collision between bodies at (&#34;</span> <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>                    to_string(point.x) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;, &#34;</span> <span style="color:#f92672">+</span> 
+</span></span><span style="display:flex;"><span>                    to_string(point.y) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;)&#34;</span>;
+</span></span><span style="display:flex;"><span>        debug.messages.push_back(msg);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Usage in collision resolution:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">resolveCollisions</span>(vector<span style="color:#f92672">&lt;</span>BroadPhaseCollisionPair<span style="color:#f92672">&gt;&amp;</span> collisions,
+</span></span><span style="display:flex;"><span>                      vector<span style="color:#f92672">&lt;</span>Body<span style="color:#f92672">&gt;&amp;</span> bodies,
+</span></span><span style="display:flex;"><span>                      PhysicsDebugInfo<span style="color:#f92672">*</span> debug <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> pair : collisions) {
+</span></span><span style="display:flex;"><span>        Body<span style="color:#f92672">&amp;</span> bodyA <span style="color:#f92672">=</span> bodies[pair.bodyA];
+</span></span><span style="display:flex;"><span>        Body<span style="color:#f92672">&amp;</span> bodyB <span style="color:#f92672">=</span> bodies[pair.bodyB];
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (debug) {
+</span></span><span style="display:flex;"><span>            PhysicsDebugger<span style="color:#f92672">::</span>drawBody(<span style="color:#f92672">*</span>debug, bodyA);
+</span></span><span style="display:flex;"><span>            PhysicsDebugger<span style="color:#f92672">::</span>drawBody(<span style="color:#f92672">*</span>debug, bodyB);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Regular collision resolution code...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (debug) {
+</span></span><span style="display:flex;"><span>            PhysicsDebugger<span style="color:#f92672">::</span>logCollision(<span style="color:#f92672">*</span>debug, bodyA, bodyB, 
+</span></span><span style="display:flex;"><span>                                        bodyA.position);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="15-common-problems-and-solutions">15. Common Problems and Solutions</h2>
+<h3 id="1-tunneling-problems">1. Tunneling Problems</h3>
+<p>When objects move too fast and pass through each other:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// Solution: Implement Continuous Collision Detection (CCD)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">bool</span> <span style="color:#a6e22e">checkContinuousCollision</span>(<span style="color:#66d9ef">const</span> Body<span style="color:#f92672">&amp;</span> a, <span style="color:#66d9ef">const</span> Body<span style="color:#f92672">&amp;</span> b, <span style="color:#66d9ef">double</span> dt) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate swept volumes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 aMove <span style="color:#f92672">=</span> vec2_mul(a.velocity, dt);
+</span></span><span style="display:flex;"><span>    vec2 bMove <span style="color:#f92672">=</span> vec2_mul(b.velocity, dt);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Expand AABBs to include motion path
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    AABB aSwept <span style="color:#f92672">=</span> getShapeBoundingBox(a);
+</span></span><span style="display:flex;"><span>    AABB bSwept <span style="color:#f92672">=</span> getShapeBoundingBox(b);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Expand bounds based on movement
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (aMove.x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) aSwept.max.x <span style="color:#f92672">+=</span> aMove.x;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> aSwept.min.x <span style="color:#f92672">+=</span> aMove.x;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (aMove.y <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) aSwept.max.y <span style="color:#f92672">+=</span> aMove.y;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span> aSwept.min.y <span style="color:#f92672">+=</span> aMove.y;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Similar for b...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Check if swept volumes intersect
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> aabbAabbCollision(aSwept, bSwept);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="2-stacking-stability">2. Stacking Stability</h3>
+<p>Objects in stacks may jitter or collapse:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// Solution: Implement position-based dynamics correction
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">stabilizeStack</span>(Body<span style="color:#f92672">&amp;</span> body, <span style="color:#66d9ef">const</span> vector<span style="color:#f92672">&lt;</span>Body<span style="color:#f92672">&gt;&amp;</span> contacts) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (contacts.size() <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Calculate average contact normal
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    vec2 avgNormal <span style="color:#f92672">=</span> {<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>};
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">auto</span><span style="color:#f92672">&amp;</span> contact : contacts) {
+</span></span><span style="display:flex;"><span>        vec2 normal <span style="color:#f92672">=</span> vec2_sub(contact.position, body.position);
+</span></span><span style="display:flex;"><span>        vec2_normalize(normal);
+</span></span><span style="display:flex;"><span>        avgNormal <span style="color:#f92672">=</span> vec2_add(avgNormal, normal);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    avgNormal <span style="color:#f92672">=</span> vec2_mul(avgNormal, <span style="color:#ae81ff">1.0</span><span style="color:#f92672">/</span>contacts.size());
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// If mostly vertical stack, dampen horizontal velocity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (fabs(avgNormal.y) <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0.8</span>) {
+</span></span><span style="display:flex;"><span>        body.velocity.x <span style="color:#f92672">*=</span> <span style="color:#ae81ff">0.8</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="3-energy-gain">3. Energy Gain</h3>
+<p>Objects gaining energy due to numerical errors:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// Solution: Implement energy monitoring and correction
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">monitorAndCorrectEnergy</span>(Body<span style="color:#f92672">&amp;</span> body, <span style="color:#66d9ef">double</span><span style="color:#f92672">&amp;</span> lastEnergy) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> currentEnergy <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.5</span> <span style="color:#f92672">*</span> body.mass <span style="color:#f92672">*</span> 
+</span></span><span style="display:flex;"><span>                          vec2_length_squared(body.velocity);
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (currentEnergy <span style="color:#f92672">&gt;</span> lastEnergy <span style="color:#f92672">*</span> <span style="color:#ae81ff">1.01</span>) {  <span style="color:#75715e">// 1% tolerance
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// Scale back velocity to match previous energy
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">double</span> scale <span style="color:#f92672">=</span> sqrt(lastEnergy <span style="color:#f92672">/</span> currentEnergy);
+</span></span><span style="display:flex;"><span>        body.velocity <span style="color:#f92672">=</span> vec2_mul(body.velocity, scale);
+</span></span><span style="display:flex;"><span>        currentEnergy <span style="color:#f92672">=</span> lastEnergy;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    lastEnergy <span style="color:#f92672">=</span> currentEnergy;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li>
+<p><strong>Core Principles</strong></p>
+<ul>
+<li>Always separate broad and narrow phase collision detection</li>
+<li>Use spatial partitioning for performance optimization</li>
+<li>Implement proper integration methods for stability</li>
+<li>Handle edge cases carefully in collision resolution</li>
+<li>Consider numerical precision in calculations</li>
+</ul>
+</li>
+<li>
+<p><strong>Performance Considerations</strong></p>
+<ul>
+<li>Optimize hot paths (collision detection and resolution)</li>
+<li>Use appropriate data structures (grid-based spatial partitioning)</li>
+<li>Implement early-out conditions where possible</li>
+<li>Avoid unnecessary square root calculations</li>
+<li>Pre-allocate memory for frequently used containers</li>
+</ul>
+</li>
+<li>
+<p><strong>Stability Tips</strong></p>
+<ul>
+<li>Use consistent time steps</li>
+<li>Implement position correction</li>
+<li>Handle resting contacts properly</li>
+<li>Monitor and correct energy conservation</li>
+<li>Use appropriate coefficients for restitution and friction</li>
+</ul>
+</li>
+</ol>
+<h3 id="common-pitfalls-to-avoid">Common Pitfalls to Avoid</h3>
+<ol>
+<li>
+<p><strong>Mathematical Issues</strong></p>
+<ul>
+<li>Dividing by zero in normalizations</li>
+<li>Accumulated floating-point errors</li>
+<li>Missing edge cases in collision detection</li>
+<li>Incorrect handling of static objects</li>
+</ul>
+</li>
+<li>
+<p><strong>Performance Issues</strong></p>
+<ul>
+<li>Checking every object against every other object</li>
+<li>Excessive memory allocations in tight loops</li>
+<li>Not using spatial partitioning</li>
+<li>Unnecessary precision in calculations</li>
+</ul>
+</li>
+<li>
+<p><strong>Stability Issues</strong></p>
+<ul>
+<li>Too large time steps</li>
+<li>Insufficient position correction</li>
+<li>Improper handling of stacking</li>
+<li>Missing rest conditions</li>
+</ul>
+</li>
+</ol>
+<p>Happy physics programming!</p>
+</div></article>
+<footer class="py:24">
+    <div class="f:fade-30 f:14 mb:8"></div>
+    <div class="f:fade-60 f:12">Theme <a class="f:bold" href="https://github.com/serkodev/holy" _target="_blank">Holy</a></div>
+</footer></div>
+    </div>
+</body>
+
+</html>
