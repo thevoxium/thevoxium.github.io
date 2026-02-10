@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Anshul Sharma</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #fbf1e6;
+      --text: #1f1f1f;
+      --muted: #6b6b6b;
+      --link: #c94f3c;
+      --link-hover: #a63f30;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "EB Garamond", serif;
+      line-height: 1.8;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 860px;
+      width: 100%;
+      padding: 72px 24px 96px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 500;
+      margin: 0;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--muted);
+      margin-top: 8px;
+      margin-bottom: 64px;
+      font-style: italic;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      /*text-transform: lowercase;*/
+      color: var(--muted);
+      margin: 0 0 32px 0;
+    }
+
+    .project {
+      margin-bottom: 32px;
+    }
+
+    .project a {
+      font-size: 1.3rem;
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    .project a:hover {
+      color: var(--link-hover);
+      text-decoration: underline;
+    }
+
+    .project p {
+      margin: 8px 0 0 0;
+      color: var(--muted);
+      max-width: 640px;
+      font-size: 1.15rem;
+    }
+
+    footer {
+      margin-top: 104px;
+      font-size: 1.2rem;
+    }
+
+    footer a {
+      color: var(--link);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 56px 20px 80px;
+      }
+
+      h1 {
+        font-size: 1.9rem;       }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>Anshul Sharma</h1>
+    <div class="subtitle">nothing is solace</div>
+
+    <section>
+      <h2>Some interesting work</h2>
+
+      <div class="project">
+        <a href="https://github.com/yourusername/project-one" target="_blank">
+          Project One
+        </a>
+        <p>
+          A short, quiet description of the idea and why it exists.
+        </p>
+      </div>
+
+      <div class="project">
+        <a href="https://github.com/yourusername/project-two" target="_blank">
+          Project Two
+        </a>
+        <p>
+          Another project, explained plainly and without embellishment.
+        </p>
+      </div>
+
+      <div class="project">
+        <a href="https://github.com/yourusername/project-three" target="_blank">
+          Project Three
+        </a>
+        <p>
+          One sentence. Honest. Minimal.
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      <a href="mailto:anshul.6273@gmail.com">anshul.6273@gmail.com</a>
+    </footer>
+  </main>
+</body>
+</html>
