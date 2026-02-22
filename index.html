@@ -1,142 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Anshul Sharma</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anshul Sharma</title>
+    
+    <!-- Loading elegant fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
 
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Deep, sophisticated dark sage/forest palette */
+            --bg-base: #060807; 
+            --text-main: #e2e8e4;
+            --text-muted: #7b857e;
+            --text-body: #a2aba5;
+            --accent: #a0cfa9; /* Elegant, ethereal sage/mint green */
 
-  <style>
-    :root {
-      --bg: #fbf1e6;
-      --text: #1f1f1f;
-      --muted: #6b6b6b;
-      --link: #c94f3c;
-      --link-hover: #a63f30;
-    }
+            --font-display: 'Cormorant Garamond', serif;
+            --font-body: 'Inter', sans-serif;
+        }
 
-    * {
-      box-sizing: border-box;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "EB Garamond", serif;
-      line-height: 1.8;
-      display: flex;
-      justify-content: center;
-    }
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            cursor: default;
+            -webkit-font-smoothing: antialiased;
+        }
 
-    .container {
-      max-width: 860px;
-      width: 100%;
-      padding: 72px 24px 96px;
-    }
+        /* Subtle Grain Texture Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.06;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
 
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 500;
-      margin: 0;
-    }
+        /* Ethereal Interactive Background Glow - Now matched to the green theme */
+        #glow {
+            position: fixed;
+            width: 45vw;
+            height: 45vw;
+            background: radial-gradient(circle, rgba(160, 207, 169, 0.08) 0%, rgba(6, 8, 7, 0) 65%);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            filter: blur(80px);
+            pointer-events: none;
+            transition: width 0.5s, height 0.5s;
+        }
 
-    .subtitle {
-      font-size: 1.25rem;
-      color: var(--muted);
-      margin-top: 8px;
-      margin-bottom: 64px;
-      font-style: italic;
-    }
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 15vh 5vw 10vh;
+            position: relative;
+            z-index: 10;
+        }
 
-    h2 {
-      font-size: 1.2rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      /*text-transform: lowercase;*/
-      color: var(--muted);
-      margin: 0 0 32px 0;
-    }
+        /* Typography */
+        h1, h2, h3 {
+            font-family: var(--font-display);
+            font-weight: 400;
+        }
 
-    .project {
-      margin-bottom: 32px;
-    }
+        header {
+            margin-bottom: 6rem;
+        }
 
-    .project a {
-      font-size: 1.3rem;
-      color: var(--link);
-      text-decoration: none;
-    }
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            letter-spacing: -0.01em;
+            margin-bottom: 0.2rem;
+            color: var(--text-main);
+        }
 
-    .project a:hover {
-      color: var(--link-hover);
-      text-decoration: underline;
-    }
+        .tagline {
+            font-family: var(--font-display);
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
 
-    .project p {
-      margin: 8px 0 0 0;
-      color: var(--muted);
-      max-width: 640px;
-      font-size: 1.15rem;
-    }
+        .section-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
-    footer {
-      margin-top: 104px;
-      font-size: 1.2rem;
-    }
+        .section-label::after {
+            content: "";
+            height: 1px;
+            flex-grow: 1;
+            /* Line tinted slightly with the accent color */
+            background: linear-gradient(to right, rgba(160, 207, 169, 0.15), transparent);
+        }
 
-    footer a {
-      color: var(--link);
-      text-decoration: none;
-    }
+        /* Pure Typographic Projects List */
+        .projects {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem; /* Generous breathing room */
+        }
 
-    footer a:hover {
-      text-decoration: underline;
-    }
+        .project-item {
+            text-decoration: none;
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
 
-    @media (max-width: 600px) {
-      .container {
-        padding: 56px 20px 80px;
-      }
+        .project-item:hover {
+            transform: translateX(12px); /* Elegant rightward glide on hover */
+        }
 
-      h1 {
-        font-size: 1.9rem;       }
-    }
-  </style>
+        .project-item h3 {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            display: inline-block;
+            position: relative;
+        }
+
+        /* Delicate underline */
+        .project-item h3::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: 2px;
+            left: 0;
+            background-color: var(--accent);
+            opacity: 0.4;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .project-item:hover h3::after {
+            opacity: 1;
+            transform: translateY(3px); /* Underline softly drops away on hover */
+        }
+
+        .project-item p {
+            font-weight: 300;
+            font-size: 1rem;
+            color: var(--text-body);
+            max-width: 90%;
+            line-height: 1.6;
+            transition: color 0.4s ease;
+        }
+
+        .project-item:hover p {
+            color: var(--text-main); /* Text brightens slightly on hover */
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 7rem;
+            padding-top: 2rem;
+        }
+
+        .contact {
+            display: inline-block;
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            color: var(--text-main);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.4s ease;
+        }
+
+        .contact::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: 2px;
+            left: 0;
+            background-color: var(--accent);
+            transform-origin: bottom right;
+            transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+
+        .contact:hover {
+            color: var(--accent);
+        }
+
+        .contact:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* Intro Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeUpAnim 1s forwards cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        @keyframes fadeUpAnim {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.25s; }
+        .delay-3 { animation-delay: 0.4s; }
+        .delay-4 { animation-delay: 0.55s; }
+
+        /* Mobile tweaks */
+        @media (max-width: 600px) {
+            .section-label::after { display: none; }
+            .project-item:hover { transform: translateX(6px); } /* Smaller glide on mobile */
+        }
+    </style>
 </head>
-
 <body>
-  <main class="container">
-    <h1>Anshul Sharma</h1>
-    <div class="subtitle">nothing is solace</div>
 
-    <section>
-      <h2>Some interesting work</h2>
+    <!-- Ethereal following glow -->
+    <div id="glow"></div>
 
-      <div class="project">
-        <a href="https://github.com/thevoxium/Ein" target="_blank">
-          Ein
-        </a>
-        <p>
-        A programming language designed for tensor computations. Currently implements a lexer, parser, and AST printer.
-        </p>
-      </div>
+    <main class="container">
+        
+        <header class="fade-up">
+            <h1>Anshul Sharma</h1>
+            <p class="tagline">'nothing' is solace</p>
+        </header>
 
-      <div class="project">
-        <a href="https://gist.github.com/thevoxium/f734ead3486883c0dd86d9c0da890ce5" target="_blank">
-          hardware.sh
-        </a>
-        <p>
-          Just a quick script for me to print relevant information regarding my CPU.
-        </p>
-      </div>
+        <section class="fade-up delay-1">
+            <h2 class="section-label">Some interesting work</h2>
+            
+            <div class="projects">
+                <!-- Project 1 -->
+                <a href="https://github.com/thevoxium/Ein" class="project-item fade-up delay-2">
+                    <h3>Ein</h3>
+                    <p>A programming language designed for tensor computations. Currently implements a lexer, parser, and AST printer.</p>
+                </a>
 
-    </section>
+                <!-- Project 2 -->
+                <a href="https://gist.github.com/thevoxium/f734ead3486883c0dd86d9c0da890ce5" class="project-item fade-up delay-3">
+                    <h3>hardware.sh</h3>
+                    <p>Just a quick script for me to print relevant information regarding my CPU.</p>
+                </a>
+            </div>
+        </section>
 
-    <footer>
-      <a href="mailto:anshul.6273@gmail.com">anshul.6273@gmail.com</a>
-    </footer>
-  </main>
+        <footer class="fade-up delay-4">
+            <a href="mailto:anshul.6273@gmail.com" class="contact">anshul.6273@gmail.com</a>
+        </footer>
+
+    </main>
+
+    <script>
+        // Smoothly follow mouse for the ethereal background glow
+        const glow = document.getElementById('glow');
+        
+        // Only run on non-touch devices for better performance
+        if (window.matchMedia("(pointer: fine)").matches) {
+            window.addEventListener('mousemove', (e) => {
+                const { clientX, clientY } = e;
+                
+                // Using animate API for smoother interpolation
+                glow.animate({
+                    left: `${clientX}px`,
+                    top: `${clientY}px`
+                }, { 
+                    duration: 3000, 
+                    fill: "forwards",
+                    easing: "ease-out"
+                });
+            });
+        }
+    </script>
 </body>
 </html>
