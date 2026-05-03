@@ -1,298 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anshul Sharma</title>
-    
-    <!-- Loading elegant fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anshul Sharma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <style>
-        :root {
-            /* Deep, sophisticated dark sage/forest palette */
-            --bg-base: #060807; 
-            --text-main: #e2e8e4;
-            --text-muted: #7b857e;
-            --text-body: #a2aba5;
-            --accent: #a0cfa9; /* Elegant, ethereal sage/mint green */
+:root {
+  --bg:        #13100d;
+  --bg2:       #1a1612;
+  --paper:     #1f1a15;
+  --ink:       #ede6d8;
+  --ink-mid:   #8c8275;
+  --ink-faint: #4a4438;
+  --ink-ghost: #2c2720;
+  --rose:      #c4856e;
+  --rose-pale: #3a2219;
+  --serif: 'Cormorant Garamond', 'Georgia', serif;
+  --sans: 'Jost', sans-serif;
+}
 
-            --font-display: 'Cormorant Garamond', serif;
-            --font-body: 'Inter', sans-serif;
-        }
+html { scroll-behavior: smooth; }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 13.5px;
+  line-height: 1.75;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-        body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            font-family: var(--font-body);
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-            cursor: default;
-            -webkit-font-smoothing: antialiased;
-        }
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 80vw 60vh at 70% 10%, rgba(196,133,110,0.055) 0%, transparent 60%),
+    radial-gradient(ellipse 60vw 40vh at 10% 90%, rgba(120,100,80,0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-        /* Subtle Grain Texture Overlay */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none;
-            z-index: 100;
-            opacity: 0.06;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
+.v-rule {
+  position: fixed;
+  left: calc(50% - 280px);
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--ink-ghost) 20%, var(--ink-ghost) 80%, transparent);
+  opacity: 0.7;
+  z-index: 0;
+}
 
-        /* Ethereal Interactive Background Glow - Now matched to the green theme */
-        #glow {
-            position: fixed;
-            width: 45vw;
-            height: 45vw;
-            background: radial-gradient(circle, rgba(160, 207, 169, 0.08) 0%, rgba(6, 8, 7, 0) 65%);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            filter: blur(80px);
-            pointer-events: none;
-            transition: width 0.5s, height 0.5s;
-        }
+.wrap {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+  position: relative;
+  z-index: 1;
+}
 
-        .container {
-            max-width: 760px;
-            margin: 0 auto;
-            padding: 15vh 5vw 10vh;
-            position: relative;
-            z-index: 10;
-        }
+header {
+  padding: 7rem 0 0;
+  opacity: 0;
+  animation: rise 1s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
+}
 
-        /* Typography */
-        h1, h2, h3 {
-            font-family: var(--font-display);
-            font-weight: 400;
-        }
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--rose);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
 
-        header {
-            margin-bottom: 6rem;
-        }
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--rose);
+  opacity: 0.5;
+}
 
-        h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            letter-spacing: -0.01em;
-            margin-bottom: 0.2rem;
-            color: var(--text-main);
-        }
+h1 {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+}
 
-        .tagline {
-            font-family: var(--font-display);
-            font-style: italic;
-            font-size: 1.3rem;
-            color: var(--text-muted);
-            font-weight: 300;
-        }
+h1 em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ink-mid);
+}
 
-        .section-label {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--text-muted);
-            margin-bottom: 3rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+.tagline {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ink-mid);
+  letter-spacing: 0.01em;
+  padding-left: 0.1em;
+}
 
-        .section-label::after {
-            content: "";
-            height: 1px;
-            flex-grow: 1;
-            /* Line tinted slightly with the accent color */
-            background: linear-gradient(to right, rgba(160, 207, 169, 0.15), transparent);
-        }
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 3.5rem 0;
+  opacity: 0;
+  animation: fade 0.8s ease 0.5s forwards;
+}
 
-        /* Pure Typographic Projects List */
-        .projects {
-            display: flex;
-            flex-direction: column;
-            gap: 3rem; /* Generous breathing room */
-        }
+.ornament-rule { flex: 1; height: 1px; background: var(--ink-ghost); }
 
-        .project-item {
-            text-decoration: none;
-            display: block;
-            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
+.ornament-diamond {
+  width: 6px;
+  height: 6px;
+  background: var(--rose-pale);
+  border: 1px solid var(--rose);
+  transform: rotate(45deg);
+  opacity: 0.8;
+}
 
-        .project-item:hover {
-            transform: translateX(12px); /* Elegant rightward glide on hover */
-        }
+section {
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: rise 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+section:nth-of-type(1) { animation-delay: 0.3s; }
+section:nth-of-type(2) { animation-delay: 0.4s; }
+section:nth-of-type(3) { animation-delay: 0.5s; }
 
-        .project-item h3 {
-            font-size: 1.8rem;
-            color: var(--accent);
-            margin-bottom: 0.8rem;
-            display: inline-block;
-            position: relative;
-        }
+.section-heading {
+  font-family: var(--sans);
+  font-size: 8.5px;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 1.75rem;
+}
 
-        /* Delicate underline */
-        .project-item h3::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 1px;
-            bottom: 2px;
-            left: 0;
-            background-color: var(--accent);
-            opacity: 0.4;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
+.project-list { display: flex; flex-direction: column; }
 
-        .project-item:hover h3::after {
-            opacity: 1;
-            transform: translateY(3px); /* Underline softly drops away on hover */
-        }
+.project {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 1.4rem 0;
+  border-top: 1px solid var(--ink-ghost);
+  position: relative;
+  transition: padding-left 0.35s cubic-bezier(0.16,1,0.3,1);
+  cursor: pointer;
+}
 
-        .project-item p {
-            font-weight: 300;
-            font-size: 1rem;
-            color: var(--text-body);
-            max-width: 90%;
-            line-height: 1.6;
-            transition: color 0.4s ease;
-        }
+.project:last-child { border-bottom: 1px solid var(--ink-ghost); }
 
-        .project-item:hover p {
-            color: var(--text-main); /* Text brightens slightly on hover */
-        }
+.project::before {
+  content: '';
+  position: absolute;
+  left: -2.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--rose);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
 
-        /* Footer */
-        footer {
-            margin-top: 7rem;
-            padding-top: 2rem;
-        }
+.project:hover { padding-left: 0.75rem; }
+.project:hover::before { transform: scaleY(1); }
 
-        .contact {
-            display: inline-block;
-            font-family: var(--font-display);
-            font-size: 1.4rem;
-            color: var(--text-main);
-            text-decoration: none;
-            position: relative;
-            transition: color 0.4s ease;
-        }
+.proj-title {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  transition: color 0.2s ease;
+}
 
-        .contact::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            transform: scaleX(0);
-            height: 1px;
-            bottom: 2px;
-            left: 0;
-            background-color: var(--accent);
-            transform-origin: bottom right;
-            transition: transform 0.5s cubic-bezier(0.86, 0, 0.07, 1);
-        }
+.proj-arrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--rose);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.2s, transform 0.25s cubic-bezier(0.16,1,0.3,1);
+  align-self: center;
+}
 
-        .contact:hover {
-            color: var(--accent);
-        }
+.project:hover .proj-arrow { opacity: 1; transform: translateX(0); }
+.project:hover .proj-title { color: var(--rose); }
 
-        .contact:hover::after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
-        }
+.proj-desc {
+  font-size: 12.5px;
+  color: var(--ink-mid);
+  font-weight: 300;
+  line-height: 1.65;
+  max-width: 42ch;
+}
 
-        /* Intro Animations */
-        .fade-up {
-            opacity: 0;
-            transform: translateY(15px);
-            animation: fadeUpAnim 1s forwards cubic-bezier(0.165, 0.84, 0.44, 1);
-        }
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
 
-        @keyframes fadeUpAnim {
-            to { opacity: 1; transform: translateY(0); }
-        }
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--ink-mid);
+  font-size: 12.5px;
+  font-weight: 300;
+  transition: color 0.2s ease;
+  position: relative;
+  padding-bottom: 2px;
+}
 
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.25s; }
-        .delay-3 { animation-delay: 0.4s; }
-        .delay-4 { animation-delay: 0.55s; }
+.contact-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rose);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+}
 
-        /* Mobile tweaks */
-        @media (max-width: 600px) {
-            .section-label::after { display: none; }
-            .project-item:hover { transform: translateX(6px); } /* Smaller glide on mobile */
-        }
-    </style>
+.contact-link:hover { color: var(--rose); }
+.contact-link:hover::after { transform: scaleX(1); }
+
+.contact-glyph {
+  width: 14px;
+  height: 14px;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.social-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--ink-mid);
+  font-size: 12.5px;
+  font-weight: 300;
+  transition: color 0.2s ease;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.social-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rose);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+
+.social-link:hover { color: var(--rose); }
+.social-link:hover::after { transform: scaleX(1); }
+
+.social-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0.4;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+}
+
+.social-link:hover .social-icon { opacity: 0.8; }
+
+footer {
+  padding: 4rem 0 6rem;
+  opacity: 0;
+  animation: fade 0.8s ease 0.9s forwards;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  color: var(--ink-faint);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.footer-inner::before, .footer-inner::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--ink-ghost);
+}
+
+.deco-circle {
+  position: fixed;
+  right: -120px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-ghost);
+  pointer-events: none;
+  opacity: 0.6;
+  z-index: 0;
+  animation: spin 80s linear infinite;
+}
+
+.deco-circle-2 {
+  position: fixed;
+  right: -60px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  border: 1px solid var(--rose-pale);
+  pointer-events: none;
+  opacity: 0.8;
+  z-index: 0;
+  animation: spin 50s linear infinite reverse;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes spin {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to   { transform: translateY(-50%) rotate(360deg); }
+}
+
+.cursor-dot {
+  position: fixed;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--rose);
+  pointer-events: none;
+  z-index: 999;
+  transform: translate(-50%,-50%);
+  transition: width 0.25s, height 0.25s;
+  opacity: 0;
+}
+.cursor-ring {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--rose);
+  pointer-events: none;
+  z-index: 998;
+  transform: translate(-50%,-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+body.cursor-over .cursor-dot { width: 10px; height: 10px; }
+
+@media (max-width: 600px) {
+  .v-rule, .deco-circle, .deco-circle-2 { display: none; }
+  header { padding-top: 4rem; }
+  .cursor-dot, .cursor-ring { display: none; }
+}
+</style>
 </head>
 <body>
 
-    <!-- Ethereal following glow -->
-    <div id="glow"></div>
+<div class="cursor-dot" id="dot"></div>
+<div class="cursor-ring" id="ring"></div>
 
-    <main class="container">
-        
-        <header class="fade-up">
-            <h1>Anshul Sharma</h1>
-            <p class="tagline">'nothing' is solace</p>
-        </header>
+<div class="v-rule"></div>
+<div class="deco-circle"></div>
+<div class="deco-circle-2"></div>
 
-        <section class="fade-up delay-1">
-            <h2 class="section-label">Some interesting work</h2>
-            
-            <div class="projects">
-                <!-- Project 1 -->
-                <a href="https://github.com/thevoxium/Ein" class="project-item fade-up delay-2">
-                    <h3>Ein</h3>
-                    <p>A programming language designed for tensor computations. Currently implements a lexer, parser, and AST printer.</p>
-                </a>
+<div class="wrap">
 
-                <!-- Project 2 -->
-                <a href="https://gist.github.com/thevoxium/f734ead3486883c0dd86d9c0da890ce5" class="project-item fade-up delay-3">
-                    <h3>hardware.sh</h3>
-                    <p>Just a quick script for me to print relevant information regarding my CPU.</p>
-                </a>
-            </div>
-        </section>
+  <header>
+    <div class="eyebrow">portfolio</div>
+    <h1>Anshul<br><em>Sharma</em></h1>
+    <p class="tagline">'nothing' is solace</p>
+  </header>
 
-        <footer class="fade-up delay-4">
-            <a href="mailto:anshul.6273@gmail.com" class="contact">anshul.6273@gmail.com</a>
-        </footer>
+  <div class="ornament">
+    <div class="ornament-rule"></div>
+    <div class="ornament-diamond"></div>
+    <div class="ornament-rule"></div>
+  </div>
 
-    </main>
+  <section>
+    <div class="section-heading">some interesting work</div>
+    <div class="project-list">
 
-    <script>
-        // Smoothly follow mouse for the ethereal background glow
-        const glow = document.getElementById('glow');
-        
-        // Only run on non-touch devices for better performance
-        if (window.matchMedia("(pointer: fine)").matches) {
-            window.addEventListener('mousemove', (e) => {
-                const { clientX, clientY } = e;
-                
-                // Using animate API for smoother interpolation
-                glow.animate({
-                    left: `${clientX}px`,
-                    top: `${clientY}px`
-                }, { 
-                    duration: 3000, 
-                    fill: "forwards",
-                    easing: "ease-out"
-                });
-            });
-        }
-    </script>
+      <a class="project" href="https://github.com/thevoxium/Ein" target="_blank" rel="noopener">
+        <div class="proj-title">
+          Ein
+          <span class="proj-arrow">&#8599;</span>
+        </div>
+        <div class="proj-desc">A programming language designed for tensor computations. Currently implements a lexer, parser, and AST printer.</div>
+      </a>
+
+      <a class="project" href="https://gist.github.com/thevoxium/f734ead3486883c0dd86d9c0da890ce5" target="_blank" rel="noopener">
+        <div class="proj-title">
+          hardware.sh
+          <span class="proj-arrow">&#8599;</span>
+        </div>
+        <div class="proj-desc">Just a quick script for me to print relevant information regarding my CPU.</div>
+      </a>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="section-heading">get in touch</div>
+    <div class="contact-row">
+      <a class="contact-link" href="mailto:anshul.6273@gmail.com">
+        <svg class="contact-glyph" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1.5" y="3.5" width="13" height="9" rx="1" stroke="currentColor" stroke-width="1"/>
+          <path d="M1.5 5L8 9.5L14.5 5" stroke="currentColor" stroke-width="1"/>
+        </svg>
+        anshul.6273@gmail.com
+      </a>
+    </div>
+    <div class="social-row">
+      <a class="social-link" href="https://github.com/thevoxium" target="_blank" rel="noopener">
+        <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+        </svg>
+        thevoxium
+      </a>
+      <a class="social-link" href="https://x.com/v0xium" target="_blank" rel="noopener">
+        <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+        v0xium
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">&#9674;</div>
+  </footer>
+
+</div>
+
+<script>
+  const dot = document.getElementById('dot');
+  const ring = document.getElementById('ring');
+  let mx = 0, my = 0, rx = 0, ry = 0, shown = false;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top = my + 'px';
+    if (!shown) {
+      dot.style.opacity = '1';
+      ring.style.opacity = '0.5';
+      shown = true;
+    }
+  });
+
+  document.addEventListener('mouseleave', () => {
+    dot.style.opacity = '0';
+    ring.style.opacity = '0';
+    shown = false;
+  });
+
+  (function loop() {
+    rx += (mx - rx) * 0.1;
+    ry += (my - ry) * 0.1;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(loop);
+  })();
+
+  document.querySelectorAll('a').forEach(el => {
+    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-over'));
+    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-over'));
+  });
+</script>
 </body>
 </html>
